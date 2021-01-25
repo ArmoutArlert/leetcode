@@ -1,0 +1,45 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+// 无头链表的删除 --> 标准答案的做法也是单独设立一个头结点呀
+
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+       
+        ListNode* before=new ListNode(0,head);
+        ListNode* pre=before;
+        ListNode* cur=before->next;
+        
+
+        while(cur){
+            if(cur->val == val){
+               pre->next = cur->next; 
+               delete cur;
+               cur=pre->next;
+            }
+            else{
+                pre = cur;
+                cur=cur->next;
+            }
+
+        }
+
+// 自己处理内存
+        cur = before->next;
+        delete before;
+        return cur;
+
+// 自己不处理内存让编译器自己弄
+ //       return before->next;
+
+    }
+};
