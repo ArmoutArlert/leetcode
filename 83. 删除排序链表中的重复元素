@@ -1,0 +1,36 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+// 其实可以更进一步，只设置一个辅助指针，看答案
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        // 无头节点一定是这样判断，而且一定是 || 而不是 && 
+        if(head==nullptr || head->next==nullptr) return head;
+      // if(head==nullptr) return head;也能通过
+        ListNode* pre=head;
+        ListNode* cur=head->next;
+
+        while(cur){
+            if(pre->val == cur->val){
+               // 不设置临时变量就这样写，对应为删除结点后仍旧能向下移动删除结点
+                pre->next=cur->next;
+                delete cur;
+                cur = pre->next;
+            }
+            else{
+                pre=cur;
+                cur=cur->next;
+            }
+        }
+        return head;
+    }
+};
