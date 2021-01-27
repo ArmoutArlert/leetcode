@@ -1,0 +1,64 @@
+// 思考如何计数！无头和有头的是不一样的
+
+// 这个写的也太麻烦了，每一次都向下遍历
+/*
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+
+        if(head == nullptr || head->next == nullptr) return head;
+
+       
+        ListNode* pre = nullptr;
+        ListNode* cur = head;
+        int count=0;
+        // 无头链表的计数也和有头的不一样
+        while(cur){
+            count++;
+            cur = cur->next;
+        }
+        for(int i=0;i<k%count;i++){
+            ListNode* pre = nullptr;
+            ListNode* cur = head;
+            // cur->next=nullptr, return head;
+            while(cur->next){
+            pre=cur;
+            cur = cur->next;
+            }
+            pre->next = cur->next;
+            cur->next = head;
+            head = cur;
+        }
+        return head;      
+    }
+};  */
+
+// 直接查找位置，O(n)
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(head == nullptr || head->next == nullptr) return head;
+        
+        ListNode* before =head;
+        ListNode* end =head;
+        //按照指针非空，i=0开始
+        int i=1;
+        while(end->next){
+            end=end->next;
+            i++;
+        }  
+        int count = k%i;
+        if(count == 0) return head;
+
+        //按照下标计数，到达期望的位置
+        //第一遍错误是弄成了j<count ，这个地方算错了
+        // 边界条件如何选？ 举一个普通例子然后就能够确定了
+        for(int j=1;j<(i-count);j++){
+            before = before->next;
+        }
+        end->next=head;
+        head = before->next;
+        before->next = nullptr; 
+        return head;
+    }
+}; 
