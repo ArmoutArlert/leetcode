@@ -10,6 +10,7 @@
  */
 
 // 其实可以更进一步，只设置一个辅助指针，看答案
+//但是可以思考一下如果自己delete内存的话能不能够只使用一个辅助指针呢
 class Solution {
 public:
     ListNode* deleteDuplicates(ListNode* head) {
