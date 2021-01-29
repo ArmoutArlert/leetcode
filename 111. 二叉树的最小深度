@@ -1,0 +1,51 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+ // 简单题，二叉树递归，就是递归基特殊一点
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        // 仅仅为了兼容root上来就为空的情况，也说明了为什么总是写递归基到root == nullptr这一步
+        // 1是好写，2是否则还是要单独写到这一步，但是有的情况递归基只能写到
+        //root->left==nullptr && root->right == nullptr这一步，所以说只能够单独加上了
+        if(root==nullptr) return 0;
+
+        // 递归基第一次不是 
+        if(root->left==nullptr && root->right == nullptr){
+            return 1;
+        }
+        int depth=0;
+        if(root->left==nullptr &&  root->right != nullptr){
+            depth= 1+minDepth(root->right);
+        }
+        else if(root->left!=nullptr && root->right == nullptr){
+             depth= 1+minDepth(root->left);
+        }
+        else{
+            depth= min(minDepth(root->left),minDepth(root->right))+1;
+        }
+        return depth;
+
+        /*
+        // 标准答案在这里就写的比我妙多了，逻辑完全兼顾到
+        int min_depth = INT_MAX;
+        if (root->left != nullptr) {
+            min_depth = min(minDepth(root->left), min_depth);
+        }
+        if (root->right != nullptr) {
+            min_depth = min(minDepth(root->right), min_depth);
+        }
+
+        return min_depth + 1;       
+        */       
+    }
+};
