@@ -1,0 +1,162 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+// 笔试做法，放到数组里面
+/*
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        ListNode* cur=head;
+        vector<int> nums;
+        while(cur){
+            nums.push_back(cur->val);
+            cur=cur->next;
+        }
+        for(int i=1;i<nums.size();i++){     
+            for(int j=i-1;j>=0;j--){
+                if(nums[j+1]<nums[j]){
+                    swap(nums[j+1],nums[j]);
+                }
+            }
+        }
+        cur=head;
+        int i=0;
+        while(cur){
+            cur->val=nums[i];
+            cur=cur->next;
+            i++;
+        }
+        return head;
+    }
+};   */
+
+/*
+//笔试做法：暴力求解
+// 正常插入排序是从右向左，但是链表只能够从左向右
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        ListNode* cur=head;     
+        while(cur){
+            ListNode* temp = head;
+            while(temp!=cur){
+                if(temp->val > cur->val){
+                    swap(temp->val,cur->val);
+                }
+                temp=temp->next;
+            }
+            cur=cur->next;
+        }
+        return head;
+    }
+};
+*/
+
+
+//面试做法
+
+// 如果自己加入头结点，则在使用原来的头指针head的时候要注意，很可能经过排序移位等操作之后就变位置了
+// 因此应该尽量使用newhead，返回可以newhead->next
+
+/* 这个超时了，还是要精简
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        
+        ListNode* newhead =new ListNode(-1,head);
+        
+        ListNode* pre1=newhead;     
+        ListNode* cur1=head;  
+        while(cur1){
+            ListNode* pre2=newhead;     
+           // ListNode* cur2=head; 
+           ListNode* cur2=newhead->next; 
+            while(cur2!= cur1){
+                if(cur2->val > cur1->val){
+                    pre2->next=pre1->next;
+                    pre1->next = cur1->next;
+                    cur1->next = cur2;   
+                    break;   
+                }
+                pre2=cur2;
+                cur2=cur2->next;
+            } 
+            pre1=cur1;
+            cur1=cur1->next; 
+        }
+       // return head;
+        return newhead->next;
+    }
+};  */
+
+
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        if(head==nullptr) return head;
+        ListNode* newhead =new ListNode(-1,head);
+       // 边界可以从这里开始，前面就要多加上一个head非空的判断
+        ListNode* pre1=head;     
+        ListNode* cur1=head->next;  
+        while(cur1){
+            // 就是加上了怎么一个判断，直接让程序很快的运行了
+            if(pre1->val > cur1->val){
+                ListNode* pre2=newhead;     
+                while(pre2->next!= cur1){
+                    if(pre2->next->val > cur1->val){
+                    
+                        pre1->next = cur1->next;
+                        cur1->next = pre2->next;   
+                        pre2->next=cur1;
+                        break;   
+                    }
+                    pre2=pre2->next;
+                } 
+            }         
+            pre1=cur1;
+            cur1=cur1->next; 
+        }
+        // return head;
+        return newhead->next;
+    }
+}; 
+
+
+/*
+// 标准答案
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        if (head == nullptr) {
+            return head;
+        }
+        ListNode* dummyHead = new ListNode(0);
+        dummyHead->next = head;
+        ListNode* lastSorted = head;
+        ListNode* curr = head->next;
+        while (curr != nullptr) {
+            if (lastSorted->val <= curr->val) {
+                lastSorted = lastSorted->next;
+            } else {
+                ListNode *prev = dummyHead;
+                while (prev->next->val <= curr->val) {
+                    prev = prev->next;
+                }
+                lastSorted->next = curr->next;
+                curr->next = prev->next;
+                prev->next = curr;
+            }
+            curr = lastSorted->next;
+        }
+        return dummyHead->next;
+    }
+};  */
+
