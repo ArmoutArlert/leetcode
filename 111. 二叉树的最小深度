@@ -16,8 +16,10 @@ public:
     int minDepth(TreeNode* root) {
         // 仅仅为了兼容root上来就为空的情况，也说明了为什么总是写递归基到root == nullptr这一步
         // 1是好写，2是否则还是要单独写到这一步，但是有的情况递归基只能写到
-        //root->left==nullptr && root->right == nullptr这一步，所以说只能够单独加上了
-        if(root==nullptr) return 0;
+        //root->left==nullptr && root->right == nullptr这一步，这种情况只能够单独加上了
+        // if(root==nullptr) return 0;
+       
+       if(root==nullptr) return 0;
 
         // 递归基第一次不是 
         if(root->left==nullptr && root->right == nullptr){
