@@ -1,0 +1,23 @@
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> sol;
+        vector<int> temp;
+        sol.push_back(temp);
+        for(int i=0;i<nums.size();i++){
+            int end=sol.size();   // 不加上这句话就爆炸了
+           for(int j=0;j<end;j++) {   // 这个地方原来写的是 for(int j=0;j<sol.size();j++),实际上底下sol是不断push_back的，所以说这样会导致不断自增，永远也出不来，可能还是对于逻辑不够具体化，再具体一些
+               temp=sol[j];
+               temp.push_back(nums[i]);
+               sol.push_back(temp); 
+           }
+           
+        }
+        return sol;
+    }
+};
+
+// 总结 for循环边界条件写不对，主要还是对于程序执行的逻辑不够清晰，清晰了之后一般边界条件不会写不对的
+// 看答案启发了我，细分为每一个节点作为最终的节点，这样看看有多少种可能性
+
+// 方法二：回溯算法，回溯与递归的不同可以看题解里面的大佬们的讲解，分清楚回溯和递归的不同
