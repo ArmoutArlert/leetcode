@@ -1,0 +1,41 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+// 解题方法：找规律，规律为：把每一个节点的左右指针交换一下就可以，典型的递归
+
+
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        trace(root);
+        return root;
+    }
+    void trace(TreeNode* root){
+        if(root==nullptr) return;   
+        if(root->left) trace(root->left);
+        if(root->right) trace(root->right); 
+        swap(root->left,root->right);
+    }
+};
+
+// 标准答案比我的代码量要少
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if (root == nullptr) {
+            return nullptr;
+        }
+        TreeNode* left = invertTree(root->left);
+        TreeNode* right = invertTree(root->right);
+        root->left = right;
+        root->right = left;
+        return root;
+    }
+};
