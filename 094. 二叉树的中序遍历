@@ -1,0 +1,76 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+ /*
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> solution;
+        trace(root,solution);
+        return solution;
+    }
+    void trace(TreeNode* root,vector<int>& s){
+        if(root==nullptr){
+            return;
+        }
+        
+        trace(root->left,s);
+        s.push_back(root->val);
+        trace(root->right,s);
+        
+    }
+};
+*/
+
+// 中序遍历非递归
+// 其实思路和递归就是一样的，就是按照递归的顺序一直遍历左子树到底再回来将自身压栈，然后再遍历右子树
+/*
+class Solution{
+    public:
+    vector<int> inorderTraversal(TreeNode* root){
+        vector<int> solution;
+        stack<TreeNode*> stk;
+        while(root!=nullptr || !stk.empty() ){    // 对这个地方的理解还是不好
+            while(root!=nullptr){   // 不停将左子树压栈，直到为空
+                stk.push(root);
+                root=root->left;
+            }
+            root=stk.top();
+            stk.pop();
+            solution.push_back(root->val);
+            root=root->right;
+        }
+        return solution;
+    }
+};
+*/
+
+// 分为压栈和出栈两部分
+// 先序遍历
+class Solution{
+    public:
+    vector<int> inorderTraversal(TreeNode* root){
+        vector<int> solution;
+        stack<TreeNode*> stk;
+        while(root!=nullptr || !stk.empty() ){    // 对这个地方的理解还是不好
+            while(root!=nullptr){   // 不停将左子树压栈，直到为空
+                stk.push(root);
+                 solution.push_back(root->val);   // 把这句话挪到这里就可以了
+                root=root->left;
+            }
+            root=stk.top();
+            stk.pop(); 
+            root=root->right;
+           
+        }
+        return solution;
+    }
+};
