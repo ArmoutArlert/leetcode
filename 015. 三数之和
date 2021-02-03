@@ -1,0 +1,92 @@
+/*
+// 关于code:
+// 一个是去重怎么写，看标准答案里面的continue写法
+// 然后是数组边界条件必判断
+
+class Solution {
+public:
+
+    vector<vector<int>> threeSum(vector<int>& nums) {
+       
+        vector<vector<int>> solution;
+        int n=nums.size();
+        if(n<3) return solution;
+        sort(nums.begin(),nums.end());
+        
+        
+        for(int a=0;a<nums.size()-2;){
+            int b=a+1,c=nums.size()-1;  //只按(是光标在中间，同时按()光标在右侧
+            while(c>b){
+                if(nums[a]+nums[b]+nums[c]==0){
+                    solution.push_back({nums[a],nums[b],nums[c]});
+                    int b1=b;
+                    while(b<=c && nums[b1]==nums[b]){
+                        b++;
+                    }
+                }
+                else if (nums[a]+nums[b]+nums[c]<0){
+                    int b1=b;
+                    while(b<=c && nums[b1]==nums[b]){
+                        b++;
+                    }
+                }
+                else{
+                    int c1=c;
+                    while(c>=b && nums[c1]==nums[c]){
+                        c--;
+                    }
+                }
+            }
+            int a1=a;
+            // 最开始这个地方没想到，导致重复，然后忘记了a<nums.size()-2，导致数组越界
+            // 边界条件检测1：当循环中数组下边不断变化时，除了要加上终止条件，还要加上下标限制范围
+            while(a<nums.size()-2 && nums[a]<=nums[a1]){
+                a++;
+            }
+
+        }
+
+        return solution;
+    }
+};   */
+
+// 标准答案
+
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        int n = nums.size();
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> ans;
+        // 枚举 a
+        for (int first = 0; first < n; ++first) {
+            // 需要和上一次枚举的数不相同
+            if (first > 0 && nums[first] == nums[first - 1]) {
+                continue;
+            }
+            // c 对应的指针初始指向数组的最右端
+            int third = n - 1;
+            int target = -nums[first];
+            // 枚举 b
+            for (int second = first + 1; second < n; ++second) {
+                // 需要和上一次枚举的数不相同
+                if (second > first + 1 && nums[second] == nums[second - 1]) {
+                    continue;
+                }
+                // 需要保证 b 的指针在 c 的指针的左侧
+                while (second < third && nums[second] + nums[third] > target) {
+                    --third;
+                }
+                // 如果指针重合，随着 b 后续的增加
+                // 就不会有满足 a+b+c=0 并且 b<c 的 c 了，可以退出循环
+                if (second == third) {
+                    break;
+                }
+                if (nums[second] + nums[third] == target) {
+                    ans.push_back({nums[first], nums[second], nums[third]});
+                }
+            }
+        }
+        return ans;
+    }
+};
