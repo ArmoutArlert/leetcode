@@ -1,0 +1,72 @@
+// 第一遍写的时候的错误代码
+/*
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        int L=-1;
+        int R=nums.size();
+        int p=0;
+        while(p<R){
+            if(nums[p]==0){
+                swap(nums[p],nums[L+1]);
+                p++;
+                L++;
+                
+            }
+           if(nums[p]==2){
+                swap(nums[p],nums[R-1]);
+                R--;
+            }
+            // 这样连着放的三个if就不是同时判断的关系了，而是执行完一个if再执行下一个if，很容易执行完nums[p]==2后swap使得当前nums[p]==1，这样就会执行下一个判断了
+            if(nums[p]==1){
+                p++;
+            }
+        }
+
+    }
+};
+
+// 使用 if -else if -else的方式
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        int L=-1;
+        int R=nums.size();
+        int p=0;
+        while(p<R){
+            if(nums[p]==0){
+                swap(nums[p],nums[L+1]);
+                p++;
+                L++;
+                
+            }
+            else if(nums[p]==2){
+                swap(nums[p],nums[R-1]);
+                R--;
+            }
+            else{
+                p++;
+            }
+        }
+
+    }
+};
+*/
+
+// 代码优化：
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        // 刚开始L和R都是数组界外的，这个靠实际含义就能够理解，表示0集和2集的范围，所以才会这样设置
+        int L=-1;
+        int R=nums.size();
+        int p=0;
+        while(p<R){
+            if(nums[p]==0) swap(nums[p++],nums[++L]);
+
+            else if(nums[p]==2) swap(nums[p],nums[--R]);  
+
+            else p++;        
+        }
+    }
+};
