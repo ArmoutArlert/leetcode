@@ -1,0 +1,117 @@
+/*
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        // 这个东西太重要了，stl中测试案例 {{}} 居然matrix.size()不是0
+        // 这个就是vector数组判断是否为空的标准写法了，牛客网上就是这么写的
+        // 但是牛客上的OJ实在是太坑了，直接说数组越界但是不告诉为什么
+        if (matrix.size() == 0 || matrix[0].size() == 0) return false;
+
+	    int col = matrix[0].size() - 1;
+	    int row = matrix.size() - 1;
+
+	    int i = 0, j = 0;
+	    for (; i <= row; i++) {
+		    if (matrix[i][col] > target) break;
+		    if (matrix[i][col] == target) return true;
+	    }
+	    for (; j <= col; j++) {
+		    if (matrix[row][j] > target) break;
+		    if (matrix[row][j] == target) return true;
+	    }
+	    for (int a = i; a < row; a++) {
+		    for (int b = j; b < col; b++) {
+			    if (matrix[a][b] == target) return true;
+		    }
+	    }
+	    return false;
+  
+
+    }
+};  
+
+// C++就直接超时了，而java的执行时间还是比较快的，是不是stl的下标寻址的事
+// 暴力求解方法
+class Solution{
+    public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target){
+        for (int i = 0; i < matrix.size(); i++) {
+            for (int j = 0; j < matrix[0].size(); j++) {
+                if (matrix[i][j] == target) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+}; */
+
+/*
+// java 代码版本，想到搜索首先要考虑二分法，每一行每一列都用一下二分法
+class Solution {
+    private boolean binarySearch(int[][] matrix, int target, int start, boolean vertical) {
+        int lo = start;
+        int hi = vertical ? matrix[0].length-1 : matrix.length-1;
+
+        while (hi >= lo) {
+            int mid = (lo + hi)/2;
+            if (vertical) { // searching a column
+                if (matrix[start][mid] < target) {
+                    lo = mid + 1;
+                } else if (matrix[start][mid] > target) {
+                    hi = mid - 1;
+                } else {
+                    return true;
+                }
+            } else { // searching a row
+                if (matrix[mid][start] < target) {
+                    lo = mid + 1;
+                } else if (matrix[mid][start] > target) {
+                    hi = mid - 1;
+                } else {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean searchMatrix(int[][] matrix, int target) {
+        // an empty matrix obviously does not contain `target`
+        if (matrix == null || matrix.length == 0) {
+            return false;
+        }
+
+        // iterate over matrix diagonals
+        int shorterDim = Math.min(matrix.length, matrix[0].length);
+        for (int i = 0; i < shorterDim; i++) {
+            boolean verticalFound = binarySearch(matrix, target, i, true);
+            boolean horizontalFound = binarySearch(matrix, target, i, false);
+            if (verticalFound || horizontalFound) {
+                return true;
+            }
+        }
+        
+        return false; 
+    }
+}  */
+
+// 官方第四种做法
+// 和标准答案一模一样，相当于双指针做法，要注意双指针指向的位置
+class Solution{
+    public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target){
+        if(matrix.size()==0 || matrix[0].size()==0) return false;
+        int i = matrix.size()-1;
+        int j =0;   
+        while(i>=0 && j<=matrix[0].size()-1){
+                if(matrix[i][j] > target) i--;
+                else if ((matrix[i][j] < target)) j++;
+                else return true;
+        }
+        return false;
+
+    }
+};
