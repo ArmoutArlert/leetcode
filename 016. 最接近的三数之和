@@ -1,0 +1,82 @@
+// 第一遍代码，可以做优化
+/*
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        // 看左边的提示，数组长度是大于3的，最大值是小于等于1000的
+        sort(nums.begin(),nums.end());
+        int near = 10000;
+        int nearsum;
+        for(int a=0;a<nums.size()-2;a++){
+            if(a>0 && nums[a]==nums[a-1]){
+                continue;
+            }
+            int b = a+1;
+            int c= nums.size()-1;
+            int temp;
+            while(b<c){
+                temp = nums[a]+nums[b]+nums[c];
+                if(temp == target) return temp;
+                else if(temp < target){
+                    if(abs(temp-target)<near){
+                        near =abs(temp-target);
+                        nearsum=temp;
+                    }
+                    int b0=b;
+                    while(b<=c && nums[b]==nums[b0]) b++;
+                    
+                }
+                else {
+                    if(abs(temp-target)<near){
+                        near =abs(temp-target);
+                        nearsum=temp;
+                    }
+                    int c0=c;
+                    while(b<=c && nums[c]==nums[c0]) c--;
+                }
+            }               
+        }
+        return nearsum;      
+    }
+};  */
+
+// 标准答案的写法，想比较于我的，其实我那个才是正常思路，他这个是通过优化分析得出可以将结果移动到上面
+// 对于leetcode标准答案很巧妙不要慌，人家也是通过优化分析得来的
+// 其实还是可以做进一步优化的，但是没有必要了，比如当nums[a]+nums[b]+nums[c]>target的时候可以一直让c++向左移，中间省略很多比较过程，但是太麻烦，对于解题来说没有必要
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        // 看左边的提示，数组长度是大于3的，最大值是小于等于1000的
+        sort(nums.begin(),nums.end());
+        int near = 10000;
+        int nearsum;
+        for(int a=0;a<nums.size()-2;a++){
+            if(a>0 && nums[a]==nums[a-1]){
+                continue;
+            }
+            int b = a+1;
+            int c= nums.size()-1;
+            int temp;
+            while(b<c){
+                temp = nums[a]+nums[b]+nums[c];
+                if(temp == target) return temp;
+                if(abs(temp-target)<near){
+                        near =abs(temp-target);
+                        nearsum=temp;
+                    }
+                else if(temp < target){
+                    //原来放在这里的if移动到了上面   
+                    int b0=b;
+                    while(b<=c && nums[b]==nums[b0]) b++;
+                    
+                }
+                else {
+                    //原来放在这里的if移动到了上面  
+                    int c0=c;
+                    while(b<=c && nums[c]==nums[c0]) c--;
+                }
+            }               
+        }
+        return nearsum;      
+    }
+};
