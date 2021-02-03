@@ -1,0 +1,75 @@
+// 程序不用写的这么麻烦，关键就是在思考整个流程的时候就给思考清楚，就可以获得简单的流程方法
+
+
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* p=l1;
+        ListNode* q=l2;
+        ListNode* pHead = new ListNode;
+         ListNode* pCur = pHead;
+        int count=0;
+        while(p && q){
+           
+            // 原来在这里进行了简写，结果一简写就错了
+            if(count+p->val + q->val >= 10){
+                    pCur->next = new ListNode((count+p->val + q->val)%10);
+                    count = 1;
+                }
+            else{
+                pCur->next = new ListNode((count+p->val + q->val)%10);
+                count =  0;
+            }
+            p=p->next;
+            q=q->next;
+            pCur=pCur->next;
+        }
+        if(p==nullptr && q!=nullptr){
+            while(q){
+                pCur->next=q;
+                if(q->val+count >= 10){
+                    q->val = (q->val+count)%10;
+                    count = 1;
+                }
+                else{
+                    q->val = q->val+count;
+                    count =  0;
+                }
+                q=q->next;
+                pCur=pCur->next;     
+            }
+            if(count==1){
+                pCur->next=new ListNode(1);
+            }    
+        }
+
+
+        else if(q==nullptr && p!=nullptr){
+           while(p){
+                pCur->next=p;
+                if(p->val+count >= 10){
+                    p->val = (p->val+count)%10;
+                    count = 1;
+                }
+                else{
+                    p->val = p->val+count;
+                    count =  0;
+                }
+                p=p->next;
+                pCur=pCur->next;     
+            }
+            if(count==1){
+                pCur->next=new ListNode(1);
+            }
+        }
+        else if(p==nullptr && q==nullptr){
+            if(count == 1){
+               pCur->next=new ListNode(1);
+            }
+            else pCur->next=nullptr;
+        }
+
+        return pHead->next;
+        // return pCur->next; 是错误的，因为pCur已经扫描过去了
+    }
+};
