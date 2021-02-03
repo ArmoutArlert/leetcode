@@ -1,0 +1,48 @@
+/*
+// 暴力搜索，官方写法也会超时
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        int max_value=0;  // 可以直接设置为0，有时间可以看看C++中最小值的宏定义
+        for(int i=0;i<n;i++){
+            for(int j=i+1;j<n;j++){
+                max_value=max(max_value,prices[j]-prices[i]);
+            }
+        }
+        return max_value;
+
+
+    }
+};  */
+
+// 贪心算法
+// 自己写的代码，自己这次边界条件写对了，主要原因就是步骤想清楚了，从哪里开始啥的，这个东西想对了基本边界条件不会错
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        
+       if(prices.size()==0) return 0;
+        int minp=prices[0];
+        int maxp=0;
+        for(int i=1;i<prices.size();i++){
+            minp=min(minp,prices[i-1]);
+            maxp=max(maxp,prices[i]-minp);
+        }
+        return maxp;
+    }
+};
+
+// 标准答案的代码，巧妙呀，就是把我里面的两步换一下顺序
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int inf = 1e9;
+        int minprice = inf, maxprofit = 0;
+        for (int price: prices) {
+            maxprofit = max(maxprofit, price - minprice);
+            minprice = min(price, minprice);
+        }
+        return maxprofit;
+    }
+};
