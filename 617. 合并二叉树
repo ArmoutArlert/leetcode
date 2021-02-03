@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+
+// 思考好为什么用深度优先遍历
+// 看出来是用递归方法
+// 递归的精髓，不用想太多递归是每一步怎么执行的，在二叉树里面只用考虑两部分，一是考虑一个一般节点向他左右两个子树要什么信息，也就是只要两层，二是递归基，也就是终点处的两层，包含终点节点和指向的nullptr,剩下啥也不要想程序自动就好用了
+
+// 答案的思路和我的是一致的，只不过比我的更优化一些，但是我的完完全全是新树，答案的不是，看样子leetcode要求不严格
+// 待思考的问题：new出来的内存怎么办？
+class Solution {
+public:
+    
+    TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2) {
+        if(!t1 && !t2) return nullptr;
+        TreeNode* tt=new TreeNode;
+        if(t1 && t2){
+            tt->val=t1->val+t2->val;
+            tt->left=mergeTrees(t1->left,t2->left);
+            tt->right=mergeTrees(t1->right,t2->right);
+        } 
+        if(t1 && !t2){
+           tt=t1; 
+        }
+        if(!t1 && t2){
+            tt=t2;
+        }
+        return tt;
+    }
+};
+
+// 标准答案
+// 也就包含了t1,t2均为空的情况，这个应该是优化过后的代码。
+// 要善于使用auto，还挺好用的
+class Solution {
+public:
+    TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2) {
+        if (t1 == nullptr) {
+            return t2;
+        }
+        if (t2 == nullptr) {
+            return t1;
+        }
+        auto merged = new TreeNode(t1->val + t2->val);
+        merged->left = mergeTrees(t1->left, t2->left);
+        merged->right = mergeTrees(t1->right, t2->right);
+        return merged;
+    }
+};
