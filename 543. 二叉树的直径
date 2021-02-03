@@ -1,0 +1,90 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+ // 第一遍用vector记录所有可能的最大值，然后自己写冒泡排序进行比较---> 太麻烦了呀
+/*
+class Solution {
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        vector<int> temp;
+        trace(root,temp);
+        if(temp.empty()) return 0;
+        sort(temp);
+        return temp.back();
+    }
+
+    void sort(vector<int>& temp){
+        for(int i=0;i<temp.size();i++){
+            int flag=0;
+            for(int j=0;j<temp.size()-i-1;j++){
+                if(temp[j]>temp[j+1]){
+                    swap(temp[j],temp[j+1]);
+                    flag=1;
+                }
+            }
+            if(flag==0) return;
+        }
+    }
+
+    int trace(TreeNode* root,vector<int>& temp){
+        if(root==nullptr) return 0;
+        int leftInfo=trace(root->left,temp);
+        int rightInfo=trace(root->right,temp);
+        int depth = max(leftInfo,rightInfo)+1;
+        temp.push_back(leftInfo+rightInfo);
+        return depth;
+    }
+};   */
+
+// 用优先级队列，省的自己排序了，笔试的时候一定这么用，省算法运行时间又节省自己code的时间
+
+//
+/*
+class Solution {
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        priority_queue<int> temp;
+        trace(root,temp);
+        return !temp.empty() ? temp.top():0;
+    }
+ 
+    int trace(TreeNode* root,priority_queue<int>& temp){
+        if(root==nullptr) return 0;
+        int leftDepth=trace(root->left,temp);
+        int rightDepth=trace(root->right,temp);
+        int depth = max(leftDepth,rightDepth)+1;
+        temp.push(leftDepth+rightDepth);
+        return depth;  //返回当前节点的深度
+    }
+}; 
+*/
+// 总结：简单题，就是深度优先遍历(递归)，麻烦在于如何返回最大值，递归返回值并不是以每一个节点为根节点的
+// 最大路径长度，所以需要额外记录最大路径长度，可以思考如何不额外分配空间
+// 小技巧，当类内函数需要一个静态变量的时候，比如求最大值啥的，可以直接设置为类的成员变量，这样就不用自己用
+// 优先级队列存储数据了
+
+class Solution {
+public:
+    int maxval;
+    int diameterOfBinaryTree(TreeNode* root) {
+        maxval=0;
+        trace(root);
+        return maxval;  // 这里面这样写就自动帮祝把root指向为空的情况过滤掉了
+    }
+ 
+    int trace(TreeNode* root){
+        if(root==nullptr) return 0;
+        int leftDepth=trace(root->left);
+        int rightDepth=trace(root->right);
+        int depth = max(leftDepth,rightDepth)+1;
+        maxval=max(maxval,leftDepth+rightDepth);
+        return depth;  //返回当前节点的深度
+    }
+};
