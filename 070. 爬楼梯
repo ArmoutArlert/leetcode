@@ -1,0 +1,35 @@
+// 递归的思想：分解到每一个子元素
+// 递归会超时的
+
+class Solution {
+public:
+    int climbStairs(int n) {
+    // 官方自己的递归这里弄了两项，n=2和n=1分别返回，并没有像我一样进行归类
+         if(n<=2) return n;  
+        return climbStairs(n-2)+climbStairs(n-1);
+    }
+};  
+
+// 方法2：动态规划的思想
+// 第一遍自己写的，与答案的思路一致
+
+class Solution {
+public:
+    int climbStairs(int n) {
+      //  if(n==1) return 1;  这句话可以不加哦，n=1的时候直接return c就返回去了，只要初始定义c=n
+      // 不必写三行怪麻烦的
+      //  int c=n;     // 这样初始化就很棒！
+      //  int a=1;
+      //  int b=1;
+        int a=1,b=1,c=n;
+        for(int i=2;i<=n;i++){
+            c=b+a;
+            a=b;
+            b=c;
+        } 
+        return c;
+    }
+};
+
+// 总结递归与动态规划：递归是从后向前，动态规划是从前向后，但是核心关系式是一样的，动态规划快就快在能够省略
+// 一些重复计算，而递归实现省略重复计算就非常麻烦----> 记忆化递归，也就是将重复计算的结果放在一个数组中存着
