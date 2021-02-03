@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int numTrees(int n) {
+       // int f[n+1];  // 这样写的话内存就不知道是什么值了，无法都初始化为0，int[]={0}也不行
+       // 总不能再写一个for循环吧
+       //然后在visual studio直接就报错了，还是用vector好一点
+
+       // vector<int> f(n,0)  这样写就少了一个
+        vector<int> f(n+1,0); 
+        f[0]=1;
+        f[1]=1;
+        for(int i=2;i<=n;i++){
+            for(int j=0;j<=i-1;j++){
+                f[i]+=f[j]*f[i-1-j];   // 本来还想分为奇偶再对半简化计算的，看来不用了
+            }
+        }
+        return f[n];      
+    }
+};
