@@ -1,0 +1,78 @@
+// 基本逻辑
+class Solution {
+public:
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        //intervals为空？---> 自动过滤掉了
+        // 省空间的话可以不用p,q，只用p
+        vector<vector<int>> solution;
+        int p=-1;
+        int q;
+        int leftValue, rightValue;
+
+        //while(p<intervals.size()-1 && intervals[p+1][0] <= newInterval[0]){
+        // vector中.size()函数返回的是无符号整型，当p>=0的时候没事，当p<0的时候比大小就出错了
+        while(p<int(intervals.size()-1) && intervals[p+1][0] <= newInterval[0]){
+            p++;
+        }
+        if(p!=-1){
+            if(intervals[p][1] >= newInterval[0]){
+                leftValue = intervals[p][0];
+                for(int i =0;i<p;i++){
+                    solution.push_back(intervals[i]);
+                }
+                q=p;
+            }
+            else{
+                leftValue = newInterval[0];
+                for(int i =0;i<=p;i++){
+                    solution.push_back(intervals[i]);
+                }
+                q=p+1;
+            }
+        }
+        // p=-1
+        else{
+            leftValue = newInterval[0];
+             q=p+1;
+        }
+
+        //算末尾
+        while(q<intervals.size() && intervals[q][1] <= newInterval[1]){
+           q++;
+        }
+        if(q<intervals.size()){
+            if(intervals[q][0] > newInterval[1]){
+            
+                rightValue = newInterval[1];
+                solution.push_back({leftValue,rightValue});
+                for(int j =q;j<intervals.size();j++){
+                    solution.push_back(intervals[j]);
+                }
+            }
+            else{
+                //rightValue = intervals[q][0];  这个地方逻辑错误了一下
+                rightValue = intervals[q][1];
+                solution.push_back({leftValue,rightValue});
+                for(int j =q+1;j<intervals.size();j++){
+                    solution.push_back(intervals[j]);
+                }
+            }
+        }
+        // q=intervals.size()
+        else{
+            rightValue = newInterval[1];
+            solution.push_back({leftValue,rightValue});
+        }
+        return solution;
+    }
+};  
+
+
+// 第一次还是写错了，说明分析程序的时候还是不够细，要细到一定程度
+
+// 一开始不用思考写好的代码，以写对为主，逻辑越清晰越好 
+
+// 像是这种复杂逻辑的题，千万不能够跳
+// 关于边界条件的事情，1.就是按照一个普通过程去思考，逻辑通了即可，不用专门想特殊案例，因为只要按照一个最普通的中间过程去思考的话那么程序里面的复杂判断就会自动帮我挡住那写特殊测试案例，这样即使出错，也是极为胳臂的测试案例的，到时候修改即可。也就是说只要按照普通过程去思考，那么几乎不用考虑特殊案例 2.注意数组不能越界，在判断的时候要专门注意加上数组不越界的条件
+
+// 这种复杂的逻辑题，只要把逻辑想清楚，一定要细化到伪代码的程度，要不根本写不对，因为太复杂了，简单逻辑的题就另当别论了
