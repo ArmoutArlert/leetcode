@@ -1,0 +1,56 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+ // 当需要返回多个信息的时候，可以返回结构体，这样就规避了返回值只有一个情况
+ // 结构体巧妙的实现了数据的打包
+ // 另外对于vector来说，如果默认的vector<int> a; 那么a[0][0]是错的，此时不能够直接使用数组索引
+ // 反正对于vector<vector<int>>来说使用起来超级别扭，熟练用
+ // vector<vector<int>> 这种如何实现动态存储呢，就是先创建一个vector<int>变量，然后把这个vector<int>
+ // 存进vector<vector<int>>
+ // 如果不使用结构体可能就要双队列记录信息了
+
+ struct Info{
+     TreeNode* ptr;
+     int depth;
+     Info(){}
+     Info(TreeNode* p,int d):ptr(p),depth(d){} 
+ };
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> sol;
+        if(root==nullptr) return sol;
+        queue<Info> que;
+        vector<int> empVec;
+        
+        Info cur;
+        int i=0;
+        int lastdepth=1;
+        sol.push_back(empVec);
+        que.push(Info(root,1));
+        while(!que.empty()){
+            cur=que.front();
+            que.pop();
+            if(cur.depth >lastdepth){
+                sol.push_back(empVec);
+                i++;
+            }
+            sol[i].push_back(cur.ptr->val);
+            lastdepth=cur.depth;
+            if(cur.ptr->left){
+                que.push(Info(cur.ptr->left,cur.depth+1));
+            }
+            if(cur.ptr->right){
+                que.push(Info(cur.ptr->right,cur.depth+1));
+            }
+        }
+        return sol;
+    }
+};
