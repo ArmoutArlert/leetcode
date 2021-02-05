@@ -1,0 +1,64 @@
+// 参考答案的dp方式，不是自己想的
+// 注意输入的是字符串形式的
+class Solution {
+public:
+    int maximalSquare(vector<vector<char>>& matrix) {
+        if(matrix.size()==0 || matrix[0].size()==0) return 0;
+        int row = matrix.size();
+        int col = matrix[0].size();
+        int square = 0;
+        vector<vector<int>> dp(row,vector<int>(col));  
+        for(int j=0;j<col;j++){
+            dp[0][j]=matrix[0][j]=='0'?0:1;
+            square=max(square,dp[0][j]);
+        }
+        for(int i=0;i<row;i++){
+            dp[i][0]=matrix[i][0]=='0'?0:1;
+            square=max(square,dp[i][0]);
+        }
+
+        for(int i=1;i<row;i++){
+            for(int j=1;j<col;j++){
+                if(matrix[i][j]=='0'){
+                    dp[i][j]=0;
+                }
+                else{
+                    dp[i][j]=min(min(dp[i][j-1],dp[i-1][j-1]),dp[i-1]                       [j])+1;
+                    }
+               
+                square=max(square,dp[i][j]);
+            }
+        }
+        return square*square;
+    }
+};
+
+/*
+//标准答案，判断逻辑更为清晰
+class Solution {
+public:
+    int maximalSquare(vector<vector<char>>& matrix) {
+        if (matrix.size() == 0 || matrix[0].size() == 0) {
+            return 0;
+        }
+        int maxSide = 0;
+        int rows = matrix.size(), columns = matrix[0].size();
+        vector<vector<int>> dp(rows, vector<int>(columns));
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (matrix[i][j] == '1') {
+                    if (i == 0 || j == 0) {
+                        dp[i][j] = 1;
+                    } else {
+                        dp[i][j] = min(min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]) + 1;
+                    }
+                    maxSide = max(maxSide, dp[i][j]);
+                }
+            }
+        }
+        int maxSquare = maxSide * maxSide;
+        return maxSquare;
+    }
+};
+
+*/
