@@ -1,0 +1,87 @@
+//想到了分解为回文串为奇数个和回文串为偶数个的情况
+// 然后这种面试的时候对于奇数个和偶数个通用的部分最好改成一个函数
+
+/*
+class Solution {
+public:
+
+    string longestPalindrome(string s) {
+        int left,right;
+        int n=s.size();
+        int maxsize = 0;
+        string str;
+        for(int i=0;i<s.size();i++){
+            left=i;
+            right=i;
+            while(left-1>=0 && right+1<n && s[left-1]==s[right+1] ){
+                left--;
+                right++;
+            }
+            if((right-left+1) > maxsize){
+                // stl给范围的时候是左闭右开，所以右侧加1
+                str = string(s.begin()+left,s.begin()+right+1);
+                maxsize=right-left+1;
+            }
+        }
+        for(int i=0;i<s.size()-1;i++){
+            left=i;
+            right=i+1;
+            // for循环中用continue要多注意，后面的i++还是会执行的
+            if(s[left]!=s[right]){
+              //  i++;
+                continue;
+            }
+            while(left-1>=0 && right+1<n && s[left-1]==s[right+1] ){
+                left--;
+                right++;
+            }
+            if(right-left+1 > maxsize){
+                str = string(s.begin()+left,s.begin()+right+1);
+                maxsize=right-left+1;
+            }
+        }
+        return str;
+
+
+
+
+
+    }
+};
+*/
+
+// 写成函数版本
+class Solution {
+public:
+
+    void justify(string& s,string& str,int& maxsize,int left,int right){
+        while(left-1>=0 && right+1<s.size() && s[left-1]==s[right+1] ){
+                left--;
+                right++;
+            }
+            if((right-left+1) > maxsize){
+                // stl给范围的时候是左闭右开，所以右侧加1
+                str = string(s.begin()+left,s.begin()+right+1);
+                maxsize=right-left+1;
+            }
+    }
+
+    string longestPalindrome(string s) {
+        int n=s.size();
+        int maxsize = 0;
+        string str;
+        for(int i=0;i<s.size();i++){
+            justify(s,str,maxsize,i,i);
+        }
+        for(int i=0;i<s.size()-1;i++){ 
+            if(s[i]==s[i+1]){
+              justify(s,str,maxsize,i,i+1);
+            }    
+        }
+        return str;
+    }
+};
+
+// 参考标准答案，去了解string 的 substr与substring两个函数的用法
+// 参考标准答案，准备二维dp的模板，就是不论是边界情况还是递推情况都在循环里面赋值
+
