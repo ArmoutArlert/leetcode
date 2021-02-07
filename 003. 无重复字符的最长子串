@@ -1,0 +1,80 @@
+// 调试了很久，思路差不多，主要是涉及到多个判断的时候的code能力
+
+// 经验：千万不要把好几个while()循环放在一个while()里面，能拆分成多个while()循环一定要拆分成多个，这样好判断。
+
+// 1.关于多个循环到多个判断的时候，不要过于着急，首先一定要明确最基础一般性的思路，一定要选一个明朗的，然后把框架写出来
+
+//2.去测试这个基础性框架是不是对于所有的情况都好用，因为很多时候只要一般性思路以及边界条件对了，特殊情况也能执行出正常效果，比如leetcode03中l==r的判断，其实不影响我程序的正常运行的。
+
+// 3.不要试图一下子把所有特殊情况都想到都写出来，这样不现实，一定是先把基本情况写完，然后思考特殊情况或者直接调试程序看看哪里不行再决定如何更改，一下子都想明白是做不到的
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int n=s.size();
+        if(n<2) return n;
+	    int l = 0, r = 1;
+	    int maxval = 0;
+        // 注意这里是char而不是string，string里面单个元素是char类型
+	    unordered_set<char> us;
+	    us.insert(s[0]);
+	    while (r < s.size()) {
+            /*
+            //woc, 我这里写了这么一堆判断相等的情况，结果不写也编译通过了？？？
+		    if (l == r) {
+			    us.insert(s[r]);
+			    maxval = max(maxval, 1);
+			    if (r<s.size()-1 && s[r] == s[r + 1]) {
+				    us.erase(s[l]);
+				    l++;		
+			    }
+			    r++;
+			    continue;
+		    }
+            //else if (us.count(s[r]) == 0) {
+             */   
+            if (us.count(s[r]) == 0) {
+                us.insert(s[r]);
+                ++r;
+            }
+            else {
+                us.erase(s[l]);
+                l++;
+                
+            }
+            maxval = max(maxval, r - l);
+        }
+	    return maxval;
+    }
+};
+
+/*
+// 标准答案
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        // 哈希集合，记录每个字符是否出现过
+        unordered_set<char> occ;
+        int n = s.size();
+        // 右指针，初始值为 -1，相当于我们在字符串的左边界的左侧，还没有开始移动
+        int rk = -1, ans = 0;
+        // 枚举左指针的位置，初始值隐性地表示为 -1
+        for (int i = 0; i < n; ++i) {
+            if (i != 0) {
+                // 左指针向右移动一格，移除一个字符
+                occ.erase(s[i - 1]);
+            }
+            while (rk + 1 < n && !occ.count(s[rk + 1])) {
+                // 不断地移动右指针
+                occ.insert(s[rk + 1]);
+                ++rk;
+            }
+            // 第 i 到 rk 个字符是一个极长的无重复字符子串
+            ans = max(ans, rk - i + 1);
+        }
+        return ans;
+    }
+};
+
+
+*/
