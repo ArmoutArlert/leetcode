@@ -1,0 +1,79 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+ // 就是递归的思路，深度优先搜索
+
+
+class Solution {
+public:
+
+    void trace(TreeNode* root, int targetSum,vector<vector<int>>&vec,vector<int> path){
+        if(root==nullptr) return;
+        if(root->left==nullptr && root->right == nullptr){
+            int sum=0;
+            path.push_back(root->val);
+            for(auto val:path){
+                sum += val;
+            }
+            if(sum==targetSum){ 
+                vec.push_back(path);
+                return;
+            }
+        }
+        // 深度优先搜索
+        path.push_back(root->val);
+        trace(root->left,targetSum,vec,path);
+        trace(root->right,targetSum,vec,path);
+    }
+
+    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+        vector<vector<int>> sol;
+        vector<int> path;
+        // 经过优化发现不用这样，递归函数自动帮助过滤了
+        /*
+        if(root){
+            trace(root,targetSum,sol,path);
+        }  */
+        trace(root,targetSum,sol,path);
+        return sol;
+    }   
+}; 
+
+/*
+// 标准答案
+class Solution {
+public:
+    vector<vector<int>> ret;
+    vector<int> path;
+
+    void dfs(TreeNode* root, int sum) {
+        if (root == nullptr) {
+            return;
+        }
+        path.emplace_back(root->val);
+        sum -= root->val;
+        if (root->left == nullptr && root->right == nullptr && sum == 0) {
+            ret.emplace_back(path);
+        }
+        dfs(root->left, sum);
+        dfs(root->right, sum);
+        path.pop_back();  // 使用剪枝可以节省空间
+    }
+
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+        dfs(root, sum);
+        return ret;
+    }
+};
+*/
+
+
