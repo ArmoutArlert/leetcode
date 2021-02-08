@@ -1,0 +1,14 @@
+//简单题，要么排序要么哈希表
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
+        unordered_set<int> hashset;
+        for(auto ele:nums){
+            if(hashset.count(ele)==0){
+                hashset.emplace(ele);
+            }
+            else return true;
+        }
+        return false;
+    }
+};
