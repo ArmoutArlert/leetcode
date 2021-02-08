@@ -1,0 +1,60 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+// 二叉树递归基的选取
+// 注意叶子节点的判断该是什么样的 
+
+/*
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if(root==nullptr) return false;
+        return trace(root,targetSum,0);
+    }
+    bool trace(TreeNode* root, int targetSum,int sum){
+        if(root==nullptr){
+            return sum == targetSum;
+        }
+        sum += root->val;
+
+        if(root->left && root->right){
+            return trace(root->left,targetSum,sum) || trace(root->right,targetSum,sum) ;
+        }
+        else if(root->left && !root->right){
+            return trace(root->left,targetSum,sum);
+        }
+        return trace(root->right,targetSum,sum);
+        
+        
+    }
+};
+*/
+
+// 标准答案，涉及到叶子节点的题：会有两个递归基础
+// 涵盖所有可能，很妙
+class Solution {
+public:
+    bool hasPathSum(TreeNode *root, int sum) {
+        if (root == nullptr) {
+            return false;
+        }
+        if (root->left == nullptr && root->right == nullptr) {
+            return sum == root->val;
+        }
+        return hasPathSum(root->left, sum - root->val) ||
+               hasPathSum(root->right, sum - root->val);
+    }
+};
+
+
+
+
+
+
