@@ -1,0 +1,59 @@
+// 暴力方法，关于数组变环之后的循环判断，可以加一个运算标志位flag/count,不要怕花费空间， 时间复杂度O(N)
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int n = gas.size();
+        int i=0;      
+        vector<int> gasadd(n);
+        // 计算差值
+        for(int i=0;i<n;i++){
+            gasadd[i]=gas[i]-cost[i];
+        }
+        // 双重循环
+        for(int i=0;i<n;i++){
+            int j=i;
+            int count=0;
+            int curgas=0;
+            while(count<=n){
+                curgas += gasadd[j];
+                if(curgas<0){break;}
+                if((i==0 && j==n-1)||(i!=0 && j==i-1)){return i;}
+                count++;
+                // 出错原因，这里写成了j=n-1了，直接变为赋值语句了
+                if(j==n-1) j=0;
+                else j++;
+            }
+        }
+        return -1;
+    }
+};
+
+/*
+// 标准答案，十分巧妙，一次遍历
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int n = gas.size();
+        int i = 0;
+        while (i < n) {
+            int sumOfGas = 0, sumOfCost = 0;
+            int cnt = 0;
+            while (cnt < n) {
+                int j = (i + cnt) % n;
+                sumOfGas += gas[j];
+                sumOfCost += cost[j];
+                if (sumOfCost > sumOfGas) {
+                    break;
+                }
+                cnt++;
+            }
+            if (cnt == n) {
+                return i;
+            } else {
+                i = i + cnt + 1;
+            }
+        }
+        return -1;
+    }
+};
+*/
