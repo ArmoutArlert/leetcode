@@ -1,0 +1,65 @@
+// c++中哈希表不能够像java那样进行覆盖，所以还要自己手动覆盖
+// 来一次就加入哈希表中，等最近相同键值加入时判断是否在k范围内，不在就覆盖
+/*
+// 自己的想法，用hashmap
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        unordered_map<int,int> hash;
+        for(int i=0;i<nums.size();i++){
+            if(hash.count(nums[i])){
+                if(i-hash[nums[i]]<=k) return true;
+                else{
+                    hash.erase(nums[i]);
+                    hash.emplace(nums[i],i);
+                }
+            }
+            else{
+                hash.emplace(nums[i],i);
+            }
+        }
+        return false;
+
+    }
+}; 
+*/
+
+/*
+// 调整了一下，能够节省一行代码
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        unordered_map<int,int> hash;
+        for(int i=0;i<nums.size();i++){
+            if(hash.count(nums[i])){
+                if(i-hash[nums[i]]<=k) return true;
+                else{
+                    hash.erase(nums[i]);
+                }
+            } 
+            hash.emplace(nums[i],i);      
+        }
+        return false;
+    }
+};  */
+
+// 标准答案做法，维持一个大小为k+1的滑动窗口，使用hashset
+// 逻辑实现比较巧妙
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        unordered_set<int> hash;
+        for(int i=0;i<nums.size();i++){         
+            if(hash.count(nums[i])>0){
+                return true;
+            } 
+            hash.emplace(nums[i]); 
+            if(hash.size()>=k+1){
+                hash.erase(nums[i-k]); // 这个地方非常巧妙
+            }
+        }
+        return false;
+        
+    }
+}; 
+
