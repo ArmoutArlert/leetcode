@@ -1,0 +1,51 @@
+
+// 关于循环到哪里停，以及指针位置从哪里开始，只要尝试特例即可
+/*
+// 第一遍，基础逻辑
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int p=0;
+        int len=0;
+        int i=0;
+
+        while(i<s.size()){   
+            if(s[i]!= ' '){
+                // 这个数组是否越界别忘了
+                while(i<s.size() && s[i]!= ' '){
+                    i++;
+                    p++;
+                }
+                len=p;
+            }
+            else{
+                p=0;
+                i++;
+            }
+        }
+        return len;  
+    }
+};   */
+
+
+//自己的精简版，看别人的答案可以设立一个flag，区分现在是否找到单词
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int p=0;
+        int len=0;
+
+        for(int i=0;i<s.size();i++){   
+            if(s[i]!= ' '){
+             
+               // p++;
+               // len=p; 
+                len = ++p;
+            }
+            else{
+                p=0;   
+            }
+        }
+        return len;  
+    }
+};  
