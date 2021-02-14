@@ -1,0 +1,28 @@
+// 根据参考答案写的
+//也可以先对列进行二分法再对行进行二分，但是这样效率没有答案这种高
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        if(matrix.size()==0 || matrix[0].size()==0) return false;
+        int m = matrix.size();
+        int n = matrix[0].size();
+        /*
+        // 可写可不写
+        if(target < matrix[0][0] || target > matrix[m-1][n-1]){
+            return false;
+        }  */
+        // 将二维数组虚拟转化为标准的一维数组
+        int l = 0;
+        int r = (m)*(n)-1;
+        // 标准二分法模型 + 一维二维数组转化
+        while(l<=r){
+            int mid = l + (r-l)/2;
+            int row = mid / n;
+            int col = mid % n;
+            if(matrix[row][col]==target) return true;
+            else if(matrix[row][col] > target) r = mid-1;
+            else l = mid + 1;
+        }
+        return false;
+    }
+};
