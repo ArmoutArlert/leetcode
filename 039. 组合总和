@@ -1,0 +1,90 @@
+/*
+// 基本逻辑
+class Solution {
+public:
+
+    void trace(int pos,int rest,vector<int>& candidates,vector<int> path,vector<vector<int>>& vec){            
+        if(rest == 0){
+            vec.push_back(path);
+            return;
+        }
+        if(pos >= candidates.size()){ return;}
+        //第一遍错误，这里写成了rest-num-i*candidates[pos]，是不对的
+        for(int i=0;rest- i*candidates[pos]>=0 ;i++){
+           if(i!=0){path.push_back(candidates[pos]);}
+           trace(pos+1,rest-i*candidates[pos],candidates,path,vec);
+        }
+    }
+
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> sol;
+        if(!candidates.empty()){
+            trace(0,target,candidates,{},sol);
+        }
+        return sol;
+    }
+};*/
+
+/*
+// 探索关于省内存
+class Solution {
+public:
+
+    void trace(int pos,int rest,vector<int>& candidates,vector<int>& path,vector<vector<int>>& vec){            
+        if(rest == 0){
+            vec.push_back(path);
+            return;
+        }
+        if(pos >= candidates.size()){ return;}
+
+        vector<int> temp = path;
+
+        //第一遍错误，这里写成了rest-num-i*candidates[pos]，是不对的
+        for(int i=0;rest- i*candidates[pos]>=0 ;i++){
+           if(i!=0){path.push_back(candidates[pos]);}
+           trace(pos+1,rest-i*candidates[pos],candidates,path,vec);
+           // if(i!=0) {path.pop_back();} 对比答案，单步执行使用pop_back()可以，多步执行就要用这种方式最后恢复
+        }
+        path=temp;
+    }
+
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> sol;
+        vector<int> path;
+        if(!candidates.empty()){
+            trace(0,target,candidates,path,sol);
+        }
+        return sol;
+    }
+};  */
+
+
+// 标准答案写法，注意如何省内存的
+class Solution {
+public:
+
+    void trace(int pos,int rest,vector<int>& candidates,vector<int>& path,vector<vector<int>>& vec){            
+      
+        if(rest == 0){
+            vec.push_back(path);
+            return;
+        }  
+        if(pos >= candidates.size()){ return;}
+       trace(pos+1,rest,candidates,path,vec);
+        if(rest- candidates[pos]>=0 ){
+           path.push_back(candidates[pos]);
+           // 这个地方就不是pos+1了
+           trace(pos,rest-candidates[pos],candidates,path,vec);
+           path.pop_back();
+        }
+    }
+
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> sol;
+        vector<int> path;
+        if(!candidates.empty()){
+            trace(0,target,candidates,path,sol);
+        }
+        return sol;
+    }
+};
