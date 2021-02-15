@@ -1,0 +1,34 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+
+//答案有很多种，可以和标准答案不一样，一样能够通过测试
+// 用的标准二分程序 + 递归构造二叉树
+
+//标准答案和我写的也是一样的，是和示例的结果是不一样的
+class Solution {
+public:  
+    TreeNode* trace(int left, int right,vector<int>& nums){
+        //考察对于二分法的边界情况的理解
+        if(left > right){return nullptr;}
+        //这句话加上和不加上都可以
+        //if(left == right){return new TreeNode(nums[left]);}
+      
+        int mid = left + (right - left)/2;
+        return new TreeNode(nums[mid],trace(left,mid-1,nums),trace(mid+1,right,nums));     
+      
+    }
+
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return trace(0,nums.size()-1,nums);
+    }
+};
