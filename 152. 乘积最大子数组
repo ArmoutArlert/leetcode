@@ -1,0 +1,63 @@
+
+//暴力递归：超时，由于mul可能有负数，无法改成动态规划
+// 其实暴力方法不一定要用递归，不用递归可能不超时
+/*
+class Solution {
+public:
+
+    int trace(vector<int>& nums,int index,int mul){ 
+        mul *= nums[index];
+        if(index == nums.size()-1){return mul;}
+        return max(mul,trace(nums,index+1,mul));
+
+    }
+
+    int maxProduct(vector<int>& nums) {
+        int maxval = INT_MIN;
+        for(int i = 0;i<nums.size();i++){
+            maxval = max(maxval,trace(nums,i,1));
+        }
+        return maxval;
+    }
+};  
+*/
+
+/*
+// 非递归版暴力写法，更简单，虽然最终也超时
+class Solution {
+public:
+
+    int maxProduct(vector<int>& nums) {
+        int maxval = INT_MIN;
+        for(int i =0 ;i<nums.size();i++){
+            int mul = 1;
+            for(int j=i;j<nums.size();j++){
+                mul *= nums[j];
+                maxval = max(maxval , mul);
+            }
+        }
+        return maxval;
+    }
+};  
+*/
+
+// 动态规划
+// 是参考答案的动态规划方程，这个没有去想递归，直接做出来的
+class Solution {
+public:
+
+    int maxProduct(vector<int>& nums) {
+        int maxval = INT_MIN;
+        int fmax = 1;
+        int fmin = 1;
+        int temp;
+
+        for(int i = 0; i<nums.size();i++){
+            temp = fmax;
+            fmax = max(fmax*nums[i],max(fmin*nums[i],nums[i]));
+            fmin = min(temp*nums[i],min(fmin*nums[i],nums[i]));
+            maxval = max(maxval,fmax);
+        }
+        return maxval;
+    }
+};  
