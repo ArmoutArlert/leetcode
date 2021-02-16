@@ -1,0 +1,80 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+
+//递归写法   ---> 其实是麻烦的
+/*
+class Solution {
+public: 
+    TreeNode* ans = nullptr;
+    void trace(TreeNode* root, TreeNode* p, TreeNode* q){
+        if(root->val >= p->val && root->val <= q->val){
+            ans = root;
+        }
+        else if(root->val > q->val){
+            trace(root->left,p,q);
+        }
+        else {
+            trace(root->right,p,q);
+        }
+    }
+
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        
+        p->val < q->val ? trace(root,p,q): trace(root,q,p);
+        return ans;
+    }
+};  */
+
+// ---> 非递归写法,应该是运行的更快
+/*
+class Solution {
+public: 
+   
+
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        TreeNode* ans = root;
+        if(p->val > q->val){swap(p,q);}
+        while(ans!=nullptr){
+            if(ans->val >= p->val && ans->val <= q->val){
+                return ans;
+            }
+            else if(ans->val < p->val){
+                ans = ans-> right;
+            }
+            else{
+                ans = ans->left;
+            }
+        }
+        return nullptr;
+       
+    }
+}; */
+
+
+// 标准答案
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        TreeNode* ancestor = root;
+        while (true) {
+            if (p->val < ancestor->val && q->val < ancestor->val) {
+                ancestor = ancestor->left;
+            }
+            else if (p->val > ancestor->val && q->val > ancestor->val) {
+                ancestor = ancestor->right;
+            }
+            else {
+                break;
+            }
+        }
+        return ancestor;
+    }
+}; 
