@@ -1,0 +1,113 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+
+ /*
+ //做法一：将链表转化为数组
+class Solution {
+public:
+
+    TreeNode* trace(int left, int right,vector<int>& nums){
+            //考察对于二分法的边界情况的理解
+            if(left > right){return nullptr;}
+            //这句话加上和不加上都可以
+            //if(left == right){return new TreeNode(nums[left]);}
+        
+            int mid = left + (right - left)/2;
+            return new TreeNode(nums[mid],trace(left,mid-1,nums),trace(mid+1,right,nums));     
+        
+        }   
+
+
+    TreeNode* sortedListToBST(ListNode* head) {
+        ListNode* p = head;
+        vector<int> nums;
+        while(p!=nullptr){
+            nums.push_back(p->val);
+            p=p->next;
+        }
+        return trace(0,nums.size()-1,nums);
+    }
+};
+*/
+
+/*
+//快慢指针 + 二分法
+// mid->pre这里面用单独一个从头开始遍历的指针表示的
+class Solution {
+public:
+    TreeNode* trace(ListNode* left,ListNode* right){
+        //这里不能像数组那样left > right,只能退而求其次向前一步
+        if(left->next == right){return new TreeNode(left->val,nullptr,trace(right,right));}
+        if(left == right){return new TreeNode(left->val);}
+        ListNode* fast = left;
+        ListNode* slow = left;
+        ListNode* pre = left;
+
+        while(fast!=right && fast->next != right){
+            //额外一个指针记录slow->pre
+            pre = slow;
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        TreeNode* root =new TreeNode(slow->val);
+        root->left = trace(left,pre);
+        root->right = trace(slow->next,right);
+        return root;
+    }
+    
+
+
+    TreeNode* sortedListToBST(ListNode* head) {
+        if(head == nullptr) return nullptr;
+        ListNode* p =head;
+        while(p->next!=nullptr){
+            p=p->next;
+        }
+        return trace(head,p);
+    }
+};  */
+
+// 标准答案
+//代码比我好很多
+class Solution {
+public:
+    TreeNode* trace(ListNode* left,ListNode* right){
+        //判断条件变为这个了
+        if(left == right){return nullptr;}
+        ListNode* fast = left;
+        ListNode* slow = left;
+        
+        while(fast!=right && fast->next != right){  
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        TreeNode* root =new TreeNode(slow->val);
+        root->left = trace(left,slow);
+        root->right = trace(slow->next,right);
+        return root;
+    }
+    
+    TreeNode* sortedListToBST(ListNode* head) {
+        return trace(head,nullptr);
+    }
+};
