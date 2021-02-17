@@ -1,0 +1,19 @@
+//数学题，不用过于关注
+class Solution {
+public:
+    int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
+        if(A==E && B==F && C==G && D==H){
+            return (C-A)*(D-B);
+        }
+
+        int J = max(A,E);
+        int K = min(C,G);
+        int L = max(B,F);
+        int M = min(H,D);
+
+        if( K<=J || M<=L){
+            return (C-A)*(D-B)+(G-E)*(H-F);
+        }
+        return (C-A)*(D-B)+(G-E)*(H-F)-(K-J)*(M-L);
+    }
+};
