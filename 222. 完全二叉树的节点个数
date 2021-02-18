@@ -1,0 +1,75 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+ /*
+ // 方法一：深度优先搜索
+ // 时间复杂度：O(n)
+class Solution {
+public:
+
+    void trace(TreeNode* root,int& count){
+        if(root==nullptr){
+            return;
+        }
+        count++;
+        trace(root->left,count);
+        trace(root->right,count);
+    }
+
+    int countNodes(TreeNode* root) {
+        int count = 0;
+        trace(root,count);
+        return count;
+    }
+};  */
+
+//标准答案：二分查找 + 位运算
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+        int level = 0;
+        TreeNode* node = root;
+        // 一直向左遍历计算层数
+        while (node->left != nullptr) {
+            level++;
+            node = node->left;
+        }
+        // 不是很懂，这里不是乘方啊，而是乘2呀
+        int low = 1 << level, high = (1 << (level + 1)) - 1;
+        while (low < high) {
+            int mid = (high - low + 1) / 2 + low;
+            if (exists(root, level, mid)) {
+                low = mid;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return low;
+    }
+
+    bool exists(TreeNode* root, int level, int k) {
+        int bits = 1 << (level - 1);
+        TreeNode* node = root;
+        while (node != nullptr && bits > 0) {
+            if (!(bits & k)) {
+                node = node->left;
+            } else {
+                node = node->right;
+            }
+            bits >>= 1;
+        }
+        return node != nullptr;
+    }
+};
