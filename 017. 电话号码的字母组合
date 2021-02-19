@@ -1,0 +1,73 @@
+// 简单的递归，没啥难度，  ---> 官方说法叫回溯
+// 和标准答案一个思路，只不过答案用的哈希表，我用的二维动态数组
+// 可能还是用哈希表比较好
+
+class Solution {
+public:
+    void trace(vector<vector<char>>& table,vector<string>& vec,string& path,string& digits,int index){
+        if(index == digits.size()) {
+            vec.push_back(path);
+            return;
+        }
+        int i = digits[index] - '2';
+        for(auto ele : table[i] ){
+            //省内存
+            path += ele;
+            trace(table,vec,path,digits,index+1);
+            path.pop_back();
+        }
+    }
+    vector<string> letterCombinations(string digits) {
+       //看样子是允许vector<char>内元素个数不统一
+        vector<vector<char>> table{{'a','b','c'},{'d','e','f'},{'g','h','i'},{'j','k','l'},
+        {'m','n','o'},{'p','q','r','s'},{'t','u','v'},{'w','x','y','z'}};
+        vector<string> sol;
+        string path;
+        if(!digits.empty()){
+            trace(table,sol,path,digits,0);
+        }
+        return sol;
+    }
+};
+
+// 哈希表官方做法
+/*
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> combinations;
+        if (digits.empty()) {
+            return combinations;
+        }
+        unordered_map<char, string> phoneMap{
+            {'2', "abc"},
+            {'3', "def"},
+            {'4', "ghi"},
+            {'5', "jkl"},
+            {'6', "mno"},
+            {'7', "pqrs"},
+            {'8', "tuv"},
+            {'9', "wxyz"}
+        };
+        string combination;
+        backtrack(combinations, phoneMap, digits, 0, combination);
+        return combinations;
+    }
+
+    void backtrack(vector<string>& combinations, const unordered_map<char, string>& phoneMap, const string& digits, int index, string& combination) {
+        if (index == digits.length()) {
+            combinations.push_back(combination);
+        } else {
+            char digit = digits[index];
+            const string& letters = phoneMap.at(digit);
+            for (const char& letter: letters) {
+                combination.push_back(letter);
+                backtrack(combinations, phoneMap, digits, index + 1, combination);
+                combination.pop_back();
+            }
+        }
+    }
+};  */
+
+
+
