@@ -1,0 +1,38 @@
+//快慢指针法，不用交换直接赋值即可，虽然原来的数组变了，但是题目中说了没关系了
+/*
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int p = 0;
+        int q = 0;
+        //以慢指针作为循环的第一层
+        while(q<nums.size()){
+            nums[p]=nums[q];
+            p++;
+            q++;
+            while(q<nums.size() && nums[q]==nums[q-1]){
+                q++;
+            }
+        }
+        return p;
+    }
+};  */
+
+
+//标准答案的快慢指针 -->代码看起来更棒
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if (nums.size() == 0) return 0;
+        int i = 0;
+        //以快指针作为循环的第一层
+        for (int j = 1; j < nums.size(); j++) {
+            if (nums[j] != nums[i]) {
+                i++;
+                nums[i] = nums[j];
+            }
+        }
+        return i + 1;
+
+    }
+};
