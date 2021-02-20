@@ -1,0 +1,105 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+ /*
+ //虽然说不让交换节点值，但是这样根本测不出来，笔试的时候就这么用
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if(head == nullptr || head->next == nullptr) return head;
+
+        ListNode* pre = head;
+        ListNode* cur = head->next;
+        // 边界条件
+        while(cur!=nullptr && cur->next!=nullptr){
+            swap(pre->val,cur->val);
+            pre=cur->next;
+            cur=cur->next->next;
+        }
+        if(cur!=nullptr){
+            swap(pre->val,cur->val);
+        }
+        return head;
+    }
+};  */
+
+/*
+// 自己写的，有点拉夸 时间复杂度O(N)，空间复杂度O(1)
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if(head == nullptr || head->next == nullptr) return head;
+        //补上一个头节点
+        ListNode* pHead = new ListNode(0,head);
+        ListNode* pre = pHead;
+        ListNode* cur = pHead->next;
+        ListNode* suc = pHead->next->next;
+        ListNode* temp = nullptr;
+        // 链表的边界条件判断
+        while(suc!=nullptr && suc->next!=nullptr){
+           temp = suc->next;
+           suc->next = cur;
+           pre->next = suc;
+           cur->next = temp;
+
+           pre = cur;
+           cur = cur->next;
+           suc = cur->next; 
+        } 
+        //还要补上
+        if(suc!=nullptr){
+            temp = suc->next;
+            suc->next = cur;
+            pre->next = suc;
+            cur->next = temp;
+        } 
+        return pHead->next;
+    }
+};  
+*/
+/*
+// 答案的迭代方法  时间复杂度O(N)，空间复杂度O(1)
+//本质上和我的思路是一样的，只不过辅助指针改变指向的顺序和我的不一样，所以比我的简单
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        ListNode* dummyHead = new ListNode(0);
+        dummyHead->next = head;
+        ListNode* temp = dummyHead;
+        while (temp->next != nullptr && temp->next->next != nullptr) {
+            ListNode* node1 = temp->next;
+            ListNode* node2 = temp->next->next;
+            temp->next = node2;
+            node1->next = node2->next;
+            node2->next = node1;
+            temp = node1;
+        }
+        return dummyHead->next;
+    }
+};
+
+*/
+
+// 递归方法  时间复杂度O(N)，空间复杂度O(N)
+// 是因为借助了系统的栈空间，才会变得如此容易
+// 每次处理过程都一样当然可以处理递归，只不过从 从左到右 变成了 从右到左 的顺序
+// 类似于二叉树，管自己右侧的过程要信息
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if(head == nullptr || head->next == nullptr){
+            return head;
+        }
+        ListNode* suc = head->next;
+        head->next = swapPairs(suc->next);
+        suc->next = head;
+        return suc;
+    }
+};
