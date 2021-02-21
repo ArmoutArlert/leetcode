@@ -1,0 +1,84 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+
+
+//方法一：哈希表法
+/*
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode* p = headA;
+        ListNode* q = headB;
+        unordered_set<ListNode*> hash;
+        while(p!=nullptr){
+            hash.emplace(p);
+            p = p->next;
+        }
+        while(q!=nullptr){
+            if(hash.count(q)){
+                return q;
+            }
+            q = q->next;
+        }
+        return nullptr;
+    }
+};
+*/
+
+
+
+
+ // 方法二：双指针方法
+ // 使用牛客网算法课上的方法
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode* p = headA;
+        ListNode* q = headB;
+        int lengthA = 0;
+        int lengthB = 0;
+        while(p!=nullptr){
+            lengthA++;
+            p = p->next;
+        }
+        while(q!=nullptr){
+            lengthB++;
+            q = q->next;
+        }
+    
+        p = headA;
+        q = headB;
+        if(lengthA > lengthB){
+            for(int i=0;i<lengthA-lengthB;i++){
+                p = p->next;
+            }
+        }
+        else if(lengthA < lengthB){
+            for(int j=0;j<lengthB-lengthA;j++){
+            q = q->next;
+            }
+        }
+
+        //一起寻找
+        while(p!=nullptr && p!=q){
+            p = p->next;
+            q = q->next;
+        }
+        return p;
+    }
+};
+
+// 标准答案的双指针法更为巧妙
+
+
+
+
+
+
