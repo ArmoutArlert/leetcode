@@ -1,0 +1,134 @@
+/*
+//加入剪枝
+class Solution {
+public:
+    void trace(vector<vector<int>>& vec,vector<int> path,vector<int>& candidates,int target,int index){
+        // 加入剪枝，节省时间
+        if(target<0){
+            return;
+        }
+        if( index==candidates.size()){
+            if(target == 0){
+                vec.push_back(path);
+            }          
+            return;
+        }
+
+        //去重，根据本题要求，本质上对于相同元素，比如  1,1,1，如何排列出{{1},{1,1},{1,1,1}}
+        int i =index;
+        while(i+1<candidates.size() && candidates[i]==candidates[i+1]){
+            i++;
+        }
+        trace(vec,path,candidates,target,i+1);
+        for(int j = index; j<=i;j++){
+            path.push_back(candidates[j]);
+            target -= candidates[j];
+            trace(vec,path,candidates,target,i+1);
+        }
+    }
+
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(),candidates.end());
+        vector<vector<int>> sol;
+        trace(sol,{},candidates,target,0);
+        return sol;
+    }
+};
+*/
+
+
+
+
+
+/*
+//省path空间
+class Solution {
+public:
+    void trace(vector<vector<int>>& vec,vector<int>& path,vector<int>& candidates,int target,int index){
+        // 加入剪枝，节省时间
+        if(target<0){
+            return;
+        }
+        if( index==candidates.size()){
+            if(target == 0){
+                vec.push_back(path);
+            }          
+            return;
+        }
+
+        //去重，根据本题要求，本质上对于相同元素，比如  1,1,1，如何排列出{{1},{1,1},{1,1,1}}
+        int i =index;
+        while(i+1<candidates.size() && candidates[i]==candidates[i+1]){
+            i++;
+        }
+        trace(vec,path,candidates,target,i+1);
+        for(int j = index; j<=i;j++){
+            path.push_back(candidates[j]);
+            target -= candidates[j];
+            trace(vec,path,candidates,target,i+1);
+        }
+        //一个一个向外pop_back()，都比不停构造要省时间
+        for(int j=index;j<=i;j++){
+            path.pop_back();
+        }
+    }
+
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(),candidates.end());
+        vector<vector<int>> sol;
+        vector<int> path;
+        trace(sol,path,candidates,target,0);
+        return sol;
+    }
+}; */
+
+
+
+
+
+// 标准答案，用了pair
+
+class Solution {
+private:
+    vector<pair<int, int>> freq;
+    vector<vector<int>> ans;
+    vector<int> sequence;
+
+public:
+    void dfs(int pos, int rest) {
+        if (rest == 0) {
+            ans.push_back(sequence);
+            return;
+        }
+        if (pos == freq.size() || rest < freq[pos].first) {
+            return;
+        }
+
+        dfs(pos + 1, rest);
+
+        int most = min(rest / freq[pos].first, freq[pos].second);
+        for (int i = 1; i <= most; ++i) {
+            sequence.push_back(freq[pos].first);
+            dfs(pos + 1, rest - i * freq[pos].first);
+        }
+        for (int i = 1; i <= most; ++i) {
+            sequence.pop_back();
+        }
+    }
+
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+        for (int num: candidates) {
+            if (freq.empty() || num != freq.back().first) {
+                freq.emplace_back(num, 1);
+            } else {
+                ++freq.back().second;
+            }
+        }
+        dfs(0, target);
+        return ans;
+    }
+};
+
+
+
