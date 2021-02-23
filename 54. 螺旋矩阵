@@ -1,0 +1,118 @@
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> sol;
+        int row = matrix.size()-1;
+        int col = matrix[0].size()-1;
+        int count = 0;
+        while(count<=row-count && count<=col-count){
+            int i=count,j=count;
+
+            // 其实就是这两组分类，为啥要有代码洁癖呢，非要和下面四种结合在一起
+            // 这两种情况是转圈的退化，就是最后一圈退化成只有一圈或者只有一列，如果接着用四种循环的话
+            // 会出现重复加入的错误
+            if(i+1 > row-count){
+                for(;j<=col-count;j++){
+                    sol.push_back(matrix[i][j]);
+                }
+                break;
+            }
+
+            if(j+1 > col-count){
+                for(;i<=row-count;i++){
+                    sol.push_back(matrix[i][j]);
+                }
+                break;
+            }
+
+            //转圈程序
+            for(;j<col-count;j++){
+                sol.push_back(matrix[i][j]);
+            }
+            for(;i<row-count;i++){
+                sol.push_back(matrix[i][j]);
+            }
+            for(;j>count;j--){
+                sol.push_back(matrix[i][j]);
+            }
+            for(;i>count;i--){
+                sol.push_back(matrix[i][j]);
+            }
+            count++;
+           
+        }
+        return sol;
+
+    }
+};
+
+
+
+
+
+// 题解中一种好答案，借助matrix矩阵中元素的个数，就不用像我那么分类了，更容易
+/*
+private static List<Integer> spiralOrder(int[][] matrix) {
+        LinkedList<Integer> result = new LinkedList<>();
+        if(matrix==null||matrix.length==0) return result;
+        int left = 0;
+        int right = matrix[0].length - 1;
+        int top = 0;
+        int bottom = matrix.length - 1;
+        int numEle = matrix.length * matrix[0].length;
+        while (numEle >= 1) {
+            for (int i = left; i <= right && numEle >= 1; i++) {
+                result.add(matrix[top][i]);
+                numEle--;
+            }
+            top++;
+            for (int i = top; i <= bottom && numEle >= 1; i++) {
+                result.add(matrix[i][right]);
+                numEle--;
+            }
+            right--;
+            for (int i = right; i >= left && numEle >= 1; i--) {
+                result.add(matrix[bottom][i]);
+                numEle--;
+            }
+            bottom--;
+            for (int i = bottom; i >= top && numEle >= 1; i--) {
+                result.add(matrix[i][left]);
+                numEle--;
+            }
+            left++;
+        }
+        return result;
+    }
+
+*/
+
+/*
+//标准答案，用一个visit数组来判断是否遍历过
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> order = new ArrayList<Integer>();
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return order;
+        }
+        int rows = matrix.length, columns = matrix[0].length;
+        boolean[][] visited = new boolean[rows][columns];
+        int total = rows * columns;
+        int row = 0, column = 0;
+        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        int directionIndex = 0;
+        for (int i = 0; i < total; i++) {
+            order.add(matrix[row][column]);
+            visited[row][column] = true;
+            int nextRow = row + directions[directionIndex][0], nextColumn = column + directions[directionIndex][1];
+            if (nextRow < 0 || nextRow >= rows || nextColumn < 0 || nextColumn >= columns || visited[nextRow][nextColumn]) {
+                directionIndex = (directionIndex + 1) % 4;
+            }
+            row += directions[directionIndex][0];
+            column += directions[directionIndex][1];
+        }
+        return order;
+    }
+}
+
+*/
