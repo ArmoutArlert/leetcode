@@ -1,0 +1,71 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+ 
+ 
+ //自己的做法，在前序遍历的时候就直接进行更改指针，但是是看复杂度仍然不是O(N)，因为有递归在帮着使用系统栈
+ //而且我这个做法时间复杂度还不好说呢
+ /*
+class Solution {
+public:
+    TreeNode* trace(TreeNode* root){
+        if(root == nullptr){
+            return root;
+        }
+        root->left = trace(root->left);
+        root->right = trace(root->right);
+        // 调整
+        TreeNode* temp = root->left;
+        //左树不为空的时候，左树为空直接返回
+        if(temp){
+            while(temp && temp->right){
+                temp = temp->right;
+            }
+            temp->right = root->right;
+            root->right = root->left;
+            root->left = nullptr;
+        }   
+        return root;     
+    }
+
+    void flatten(TreeNode* root) {
+        trace(root);
+    }
+}; */
+
+
+
+// 使用迭代法，其实思路和我的一样，把右子树放到左子树最右节点上，这叫前驱节点法
+// 只不过不用递归，省空间
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        if(root == nullptr){
+            return;
+        }        
+        TreeNode* cur = root;     
+
+        while(cur){
+            TreeNode* temp = cur->left;
+            if(temp){
+                while(temp->right){
+                    temp = temp->right;
+                }
+                temp->right = cur->right;
+                cur->right = cur->left;
+                cur->left = nullptr;
+            }    
+            cur = cur->right;
+        }  
+    }
+};
+
+
