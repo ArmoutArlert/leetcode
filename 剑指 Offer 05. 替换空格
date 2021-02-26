@@ -1,0 +1,16 @@
+// 简单题，考察对于C++ string的使用
+class Solution {
+public:
+    string replaceSpace(string s) {
+        string str;
+        for(auto& ele : s){
+            if(ele == ' '){
+                str +="%20";
+            }
+            else{
+                str +=ele;
+            }
+        }
+        return str;
+    }
+};
