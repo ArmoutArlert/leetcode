@@ -1,0 +1,14 @@
+ // 使用栈或者vector都可以
+class Solution {
+public:
+    vector<int> reversePrint(ListNode* head) {
+        vector<int> vec;
+        ListNode* cur = head;
+        while(cur){
+            vec.push_back(cur->val);
+            cur = cur->next;
+        }
+        reverse(vec.begin(),vec.end());
+        return vec;
+    }
+};  
