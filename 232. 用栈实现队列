@@ -1,0 +1,61 @@
+// 没必要像答案那样维护front，反而会浪费空间和时间
+class MyQueue {
+public:
+
+    stack<int> stk1,stk2;
+    // 构造函数
+    MyQueue() {
+        while(!stk1.empty()){
+            stk1.pop();
+        }
+        while(!stk2.empty()){
+            stk2.pop();
+        }
+    }
+    
+    // 入队列
+    void push(int x) {
+        stk1.push(x);
+    }
+    
+    // 出队列
+    int pop() {
+        
+        if(stk2.empty()){
+            while(!stk1.empty()){   
+                stk2.push(stk1.top());
+                stk1.pop();
+            }    
+        }
+        int deletedValue = stk2.top();
+        stk2.pop();
+        return deletedValue;
+    }
+    
+    // 获取头部元素
+    int peek() {
+        //注意，有可能有stk2为空且stk1不为空的情况
+        if(stk2.empty()){
+            while(!stk1.empty()){   
+                stk2.push(stk1.top());
+                stk1.pop();
+            } 
+        }
+        return stk2.top();
+        
+    }
+    
+    // 是否为空
+    bool empty() {
+        return stk1.empty() && stk2.empty();
+    }
+};
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue* obj = new MyQueue();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->peek();
+ * bool param_4 = obj->empty();
+ */
