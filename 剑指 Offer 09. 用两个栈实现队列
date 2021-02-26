@@ -1,0 +1,43 @@
+/**
+ * Your CQueue object will be instantiated and called as such:
+ * CQueue* obj = new CQueue();
+ * obj->appendTail(value);
+ * int param_2 = obj->deleteHead();
+ */
+
+
+// 只要掌握了思路。写起来还是比较简单的
+// 每次stk2没元素了，就把元素从stk1里面都pop出来
+
+class CQueue {
+public:
+stack<int> stk1,stk2;
+    CQueue() {
+        while(!stk1.empty()){
+            stk1.pop();
+        }
+        while(!stk2.empty()){
+            stk2.pop();
+        }
+    }
+    
+    void appendTail(int value) {
+        stk1.push(value);
+    }
+    
+    int deleteHead() {
+        if(stk1.empty() && stk2.empty()){
+            return -1;
+        }
+        else if(stk2.empty()){
+            while(!stk1.empty()){
+                stk2.push(stk1.top());
+                stk1.pop();
+            }
+        }
+        int deletedValue = stk2.top();
+        stk2.pop();
+        return deletedValue;
+    }
+}; 
+
