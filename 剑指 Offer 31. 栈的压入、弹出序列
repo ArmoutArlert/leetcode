@@ -1,0 +1,17 @@
+//没做出来的原因，没想到还能够用一个栈，本以为是根据数组规律去找出结果
+
+class Solution {
+public:
+    bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
+        stack<int> stk;
+        int i=0;
+        for(auto ele:pushed){
+            stk.push(ele);
+            while(!stk.empty() && stk.top() == popped[i]){
+                stk.pop();
+                i++;
+            }
+        }
+        return stk.empty();
+    }
+};
