@@ -1,0 +1,63 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+ // 为啥不能遍历放到两个vector中，然后KMP判断是否是子数组呢?
+ // 因为像这种测试案例时候就不行：
+ // [10,12,6,8,3,11],[10,12,6,8]
+
+class Solution {
+public:
+    bool trace(TreeNode* A, TreeNode* B){
+        
+        // 初始版判断
+        /*
+        if(A == nullptr && B == nullptr){
+            return true;
+        }
+        if(A != nullptr && B== nullptr){
+            return true;
+        }
+        if(B== nullptr){
+            return true;
+        }
+        if(A == nullptr &&  B != nullptr){
+            return false;
+        }  */
+
+        // 精简版
+        if(B== nullptr){
+            return true;
+        }
+        if(A == nullptr){
+            return false;
+        }
+        if(A->val == B->val){
+            return trace(A->left,B->left) && trace(A->right,B->right);
+        }
+        return false;
+    }
+
+   // 主要执行对A为根节点的树的遍历
+    bool isSubStructure(TreeNode* A, TreeNode* B) {
+        /*
+        if(B== nullptr){
+            return false;
+        }
+        if(A == nullptr){
+            return false;
+        }  */
+        // 精简程序
+        if(A == nullptr || B== nullptr){
+            return false;
+        }
+        // 实际上这个地方还是有重复的递归
+        return trace(A,B) || isSubStructure(A->left,B) || isSubStructure(A->right,B);
+    }
+};
