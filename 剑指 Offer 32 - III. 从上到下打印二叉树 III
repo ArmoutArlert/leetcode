@@ -1,0 +1,85 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+ // 方法一：加一个level变量判断层数
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> sol;
+        if(root == nullptr){return sol;}
+        queue<TreeNode*> que;
+        que.push(root);
+        int level = 0;
+
+        while(!que.empty()){
+            int levelSize = que.size();
+            sol.push_back({});
+            for(int i=0;i<levelSize;i++){
+                TreeNode* head = que.front();
+                que.pop();
+                sol.back().push_back(head->val);
+                if(head->left){que.push(head->left);}
+                if(head->right){que.push(head->right);}
+            }
+            
+            ++level;
+            if(level%2 == 0){
+                reverse(sol.back().begin(),sol.back().end());    
+            }
+
+        }
+        return sol;
+    }
+};
+
+// 方法二：双端队列 ---> 看答案想出来的，因为方法一需要reverse
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> res;
+        if (root==NULL)
+            return res;
+        bool flag = true; //从左向右打印为true，从右向左打印为false
+        deque<TreeNode*> q;
+        q.push_back(root);
+        while (!q.empty())
+        {
+            int n = q.size();
+            vector<int> out;
+            TreeNode* node;
+            while (n>0)
+            {
+                if (flag) // 前取后放：从左向右打印，所以从前边取，后边放入
+                {
+                    node = q.front();
+                    q.pop_front();
+                    if (node->left)
+                        q.push_back(node->left);  // 下一层顺序存放至尾
+                    if (node->right)
+                        q.push_back(node->right);
+                }
+                else  //后取前放： 从右向左，从后边取，前边放入
+                {
+                    node = q.back();
+                    q.pop_back();
+                    if (node->right)
+                        q.push_front(node->right);  // 下一层逆序存放至首
+                    if (node->left)
+                        q.push_front(node->left);
+                }
+                out.push_back(node->val);
+                n--;
+            }
+            flag = !flag;
+            res.push_back(out);
+        }
+        return res;
+    }
+};
