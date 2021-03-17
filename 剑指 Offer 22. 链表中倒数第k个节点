@@ -1,0 +1,55 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+
+/*
+ // 基础做法，遍历两次链表
+class Solution {
+public:
+    ListNode* getKthFromEnd(ListNode* head, int k) {
+        int n =0;
+        ListNode* cur = head;
+        while(cur!=nullptr){
+            n++;
+            cur = cur->next;
+        }
+        int i=0;
+        cur = head;
+        while(i<n-k){
+            cur = cur->next;
+            i++;
+        }
+        return cur;
+    }
+};
+*/
+
+// 进阶做法，--> 快慢指针
+class Solution {
+public:
+    ListNode* getKthFromEnd(ListNode* head, int k) {
+        // 虽然程序中能够过滤这种情况，但是最好面试的时候单独写
+        if(head == nullptr || k==0){
+            return nullptr;
+        }
+        ListNode* fast = head;
+        ListNode* slow = head;
+        int i=0;
+        while(fast!=nullptr){
+            i++;
+            // fast要比slow多走k步，所以说当fast走了k+12步的时候，slow才开始走
+            if(i>k){
+                slow = slow->next;
+            }
+            fast = fast ->next;
+        }
+        return slow;
+    }
+};
+
+// 其他做法，使用栈帮忙记录
