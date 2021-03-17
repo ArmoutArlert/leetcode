@@ -1,0 +1,34 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+
+// 考点：中序遍历可以提前返回,右左中
+class Solution {
+public:
+    void trace(TreeNode* root,int& value,int& count,int& k){
+        if(root == nullptr){
+            return;
+        }
+        trace(root->right,value,count,k);
+        count++;
+        if(k == count){
+            value = root->val;
+            return; 
+        }
+        trace(root->left,value,count,k);
+    }
+
+    int kthLargest(TreeNode* root, int k) {
+        int value = 0;
+        int count = 0;
+        trace(root,value,count,k);
+        return value;
+    }
+};
