@@ -1,0 +1,42 @@
+// 利用递归进行分治，其实这里左子树就不用判断了，因为自己在遍历的时候已经判断过了
+class Solution {
+public:
+    bool trace(vector<int>& postorder,vector<int>& temp,int l,int r){     
+        if(l > r){
+            temp[0] = INT_MAX;
+            temp[1] = INT_MIN;
+            return true;
+        }
+        /*
+        // 写不写都可以，不写会慢一点
+        if(l == r){
+            temp[0] = postorder[r];
+            temp[1] = postorder[r];
+            return true;
+        }*/
+        int mid = postorder[r];
+        int i = l-1;
+        while(postorder[i+1] < mid){
+            i++;
+        }
+        vector<int> leftValue(2);    
+        vector<int> rightValue(2); 
+
+        bool left = trace(postorder,leftValue,l,i);
+        bool right = trace(postorder,rightValue,i+1,r-1);
+        temp[0] = min(leftValue[0],mid);
+        temp[1] = max(rightValue[1],mid);
+
+        if(left && right &&  leftValue[1]<mid && mid<rightValue[0]){
+            return true;
+        }
+        return false;
+    }
+
+    bool verifyPostorder(vector<int>& postorder) {
+        vector<int> temp(2);
+        return trace(postorder,temp,0,postorder.size()-1);
+    }
+};
+
+// 方法二：单调栈
