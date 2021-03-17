@@ -1,0 +1,78 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+// 自己写的
+ /*
+class Solution {
+public:
+    bool bfs(TreeNode* root,int& depth){
+        if(root == nullptr){
+            depth = 0;
+            return true;
+        }
+        int leftDepth = -1;
+        bool leftIs = bfs(root->left,leftDepth);
+        int rightDepth = -1;
+        bool rightIs = bfs(root->right,rightDepth);
+        
+        if(abs(leftDepth-rightDepth)<=1 && leftIs && rightIs){
+            depth = max(leftDepth,rightDepth) + 1;
+            return true;
+        }
+        return false;
+    }
+
+    bool isBalanced(TreeNode* root) {
+        int depth = -1;
+        return bfs(root,depth);
+    }
+};  */
+
+// leetcode110题官方答案1，但是官方这个时间复杂度高呀，是O(n^2)的
+// 有问题，官方这个时间复杂度高呀，是O(n^2)的
+class Solution {
+public:
+    int height(TreeNode* root) {
+        if (root == NULL) {
+            return 0;
+        } else {
+            return max(height(root->left), height(root->right)) + 1;
+        }
+    }
+
+    bool isBalanced(TreeNode* root) {
+        if (root == NULL) {
+            return true;
+        } else {
+            return abs(height(root->left) - height(root->right)) <= 1 && isBalanced(root->left) && isBalanced(root->right);
+        }
+    }
+};
+
+// 官方思路2，从下向上递归
+// 这个思路其实是和我的思路是一致的，只不过只用一个Int变量觉得是否是平衡的
+class Solution {
+    public boolean isBalanced(TreeNode root) {
+        return height(root) >= 0;
+    }
+
+    public int height(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int leftHeight = height(root.left);
+        int rightHeight = height(root.right);
+        if (leftHeight == -1 || rightHeight == -1 || Math.abs(leftHeight - rightHeight) > 1) {
+            return -1;
+        } else {
+            return Math.max(leftHeight, rightHeight) + 1;
+        }
+    }
+}
