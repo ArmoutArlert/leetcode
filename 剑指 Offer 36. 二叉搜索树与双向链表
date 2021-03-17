@@ -1,0 +1,114 @@
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+
+    Node() {}
+
+    Node(int _val) {
+        val = _val;
+        left = NULL;
+        right = NULL;
+    }
+
+    Node(int _val, Node* _left, Node* _right) {
+        val = _val;
+        left = _left;
+        right = _right;
+    }
+};*/
+
+
+// 这道题关键在于要分三种情况，左子树为空，右子树为空的时候和都不为空的逻辑不一样，看看自己是怎么处理的
+// 不为空的时候才改变值，要不就是root
+// 想要节省内存就避免使用vector，可以考虑pair，或者直接把指针作为函数参数传进去
+// 事实上书上的答案就是我这种思路，只不过他dfs函数居然返回值为void，比我的好
+/*
+class Solution {
+public:
+    // 就没有递归基了
+    // 递归函数返回两个指针，前一个指针指向双向链表第一个元素，后一个指针指向双向链表第二个元素
+    vector<Node*> bfs(Node* root){
+        vector<Node*> temp{root,root};
+        if(root->left){
+            vector<Node*> a = bfs(root->left);
+            a[1]->right = root;
+            root->left = a[1];
+            temp[0] = a[0];
+        }
+        if(root->right){
+            vector<Node*> b = bfs(root->right);
+            root->right = b[0];
+            b[0]->left = root;
+            temp[1] = b[1];   // 不为空的时候才改变值，要不就是root
+        }
+        return temp;
+    }
+
+    Node* treeToDoublyList(Node* root) {
+        if(root == nullptr) {return nullptr;}
+        vector<Node*> ret = bfs(root);
+        ret[0]->left = ret[1];
+        ret[1]->right = ret[0];
+        return ret[0];
+    }
+}; */
+
+/*
+class Solution {
+public:
+    // 就没有递归基了
+    // 递归函数返回两个指针，前一个指针指向双向链表第一个元素，后一个指针指向双向链表第二个元素
+    pair<Node*,Node*> bfs(Node* root){
+        pair<Node*,Node*> temp{root,root};
+        if(root->left){
+            pair<Node*,Node*> a = bfs(root->left);
+            a.second->right = root;
+            root->left = a.second;
+            temp.first = a.first;
+        }
+        if(root->right){
+            pair<Node*,Node*> b = bfs(root->right);
+            root->right = b.first;
+            b.first->left = root;
+            temp.second= b.second;   // 不为空的时候才改变值，要不就是root
+        }
+        return temp;
+    }
+
+    Node* treeToDoublyList(Node* root) {
+        if(root == nullptr) {return nullptr;}
+        pair<Node*,Node*> ret = bfs(root);
+        ret.first->left = ret.second;
+        ret.second->right = ret.first;
+        return ret.first;
+    }
+};  */
+
+// 大佬的答案，单独设置的pre和cur，一个一个遍历去改的
+class Solution {
+public:
+    Node* treeToDoublyList(Node* root) {
+        if(root == nullptr) return nullptr;
+        dfs(root);
+        head->left = pre;
+        pre->right = head;
+        return head;
+    }
+private:
+    Node *pre, *head;   // 应该默认指向nullptr
+    void dfs(Node* cur) {
+        if(cur == nullptr) return;
+        dfs(cur->left);
+        // 这两句话是干什么的呢？ 
+        if(pre != nullptr) pre->right = cur;  // 平常的话就是正常右侧指向cur所指向的节点
+        else head = cur;  // --> 就是刚开始的时候一直到最左子节点，将这个节点设置为头结点
+
+        cur->left = pre;
+        pre = cur;
+        dfs(cur->right);
+    }
+};
