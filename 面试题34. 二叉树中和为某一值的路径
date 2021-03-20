@@ -1,0 +1,81 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+ /*
+ // 普通版
+class Solution {
+public:
+    vector<vector<int>> sol;
+    // 叶节点写的有问题
+    void bfs(TreeNode* root, int target,vector<int> path) {
+        if(root->left == nullptr && root->right == nullptr && target==root->val){
+            path.push_back(root->val);
+            sol.push_back(path);
+            return;
+        }
+
+        path.push_back(root->val);
+        if(root->left != nullptr){
+            bfs(root->left,target-root->val,path);
+        }
+        if(root->right != nullptr){
+            bfs(root->right,target-root->val,path);
+        }   
+    }
+
+
+
+    vector<vector<int>> pathSum(TreeNode* root, int target) {
+        if(root){
+           bfs(root,target,{}); 
+        } 
+        return sol;
+    }
+};  */
+
+
+
+
+
+// 节省空间版本
+class Solution {
+public:
+    vector<vector<int>> sol;
+    // 叶节点写的有问题
+    void bfs(TreeNode* root, int target,vector<int>& path) {
+        // 这样剪枝不对，万一节点上的元素都是负数，初始目标值也是负数呢
+        // if(target < 0){return;}
+        path.push_back(root->val);
+        if(root->left == nullptr && root->right == nullptr && target==root->val){
+            sol.push_back(path);
+            path.pop_back();
+            return;
+        }
+ 
+        if(root->left != nullptr){
+            bfs(root->left,target-root->val,path);
+        }
+        if(root->right != nullptr){
+            bfs(root->right,target-root->val,path);
+        }  
+        path.pop_back(); 
+    }
+
+    vector<vector<int>> pathSum(TreeNode* root, int target) {
+        vector<int> path;
+        if(root){
+           bfs(root,target,path); 
+        } 
+        return sol;
+    }
+};
+
