@@ -1,4 +1,4 @@
-// 双指针法，两数之和，不用二分法
+// O(n^2) 复杂方法
 class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) {
@@ -16,6 +16,30 @@ public:
                 }else{
                     j--;
                 }
+            }
+        }
+        return vec;
+    }
+};
+
+
+// 双指针法，两数之和，只要O(n),固定套路，去记住！
+// 证明思路：证明每次移动排除的那些是不对的，通过比大小以及反证（如果被排除的可以，为什么之前过程没找到？）
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> vec;
+        int j = nums.size()-1;
+        int i = 0;
+        while(i<j){
+            if(nums[i]+nums[j] == target){
+                vec.push_back(nums[i]);
+                vec.push_back(nums[j]);
+                return vec;
+            }else if(nums[i]+nums[j] < target){
+                i++;
+            }else{
+                j--;
             }
         }
         return vec;
