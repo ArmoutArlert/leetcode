@@ -1,0 +1,29 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+// 二叉树的题不一定都要用递归
+// 循环即可
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        TreeNode* a = p->val > q->val ? q : p;
+        TreeNode* b = p->val > q->val ? p : q;
+        while(root){
+           if(root->val >b->val){
+               root = root->left;
+           }else if(root->val <a->val){
+               root = root->right;
+           }else{
+               return root;
+           }
+        } 
+        return nullptr;
+    }
+};
