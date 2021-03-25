@@ -1,0 +1,79 @@
+// 投票top K 问题不需要判断是否 l < r 的情况
+
+/*
+class Solution {
+public:
+
+    // 相比于之前写的快排，这里是将more的部分放在前面，less的部分放在后面
+    int quick(vector<int>& nums,int l,int r,int k){
+        int mid = l + rand()%(r-l+1);
+        swap(nums[r],nums[mid]);
+        int more = l - 1;
+        int less = r;
+        int p = l;
+
+        while(p < less){
+            if(nums[p] > nums[r]){
+                swap(nums[p++],nums[++more]);
+            }else if(nums[p] < nums[r]){
+                swap(nums[p],nums[--less]);
+            }else{
+                p++;
+            }
+        }
+        swap( nums[p],nums[r]);
+
+        if(p+1 == k){
+            return nums[p];
+        }else if(p+1 < k){
+            return quick(nums,p+1,r,k);
+        }else{
+            return quick(nums,l,p-1,k);
+        }
+    }
+
+    int findKthLargest(vector<int>& nums, int k) {
+        return quick(nums,0,nums.size()-1,k);
+    }
+};  */
+
+
+
+
+
+// 进阶版，判断中间等于的区间，这样更快
+class Solution {
+public:
+
+    // 相比于之前写的快排，这里是将more的部分放在前面，less的部分放在后面
+    int quick(vector<int>& nums,int l,int r,int k){
+        int mid = l + rand()%(r-l+1);
+        swap(nums[r],nums[mid]);
+        int more = l - 1;
+        int less = r;
+        int p = l;
+
+        while(p < less){
+            if(nums[p] > nums[r]){
+                swap(nums[p++],nums[++more]);
+            }else if(nums[p] < nums[r]){
+                swap(nums[p],nums[--less]);
+            }else{
+                p++;
+            }
+        }
+        swap( nums[p],nums[r]);
+
+        if(more+2 <= k && k <= p+1){
+            return nums[p];
+        }else if(k <= more+1){
+            return quick(nums,l,more,k);
+        }else{
+            return quick(nums,p+1,r,k);
+        } 
+    }
+
+    int findKthLargest(vector<int>& nums, int k) {
+        return quick(nums,0,nums.size()-1,k);
+    }
+};
