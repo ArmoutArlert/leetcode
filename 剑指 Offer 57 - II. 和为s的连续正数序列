@@ -1,0 +1,37 @@
+
+// 双指针的变形版本   ---> 双指针不一定非要从两侧开始，可以从一侧开始，顺便看看滑动窗口
+
+// 和暴力方法对比，看看和上次比省去了哪些，省去这些是不是对的？ 每次都只和上次对比，怎么证怎么有
+
+
+// 这道题还不是数组，因此不用判断j>target的情况
+
+
+// 标准答案就是我这么写的
+class Solution {
+public:
+    vector<vector<int>> findContinuousSequence(int target) {
+        vector<vector<int>> vec;
+        int i = 1;
+        int j = 2;
+        // 这个循环终止条件即可
+        while(i < j){
+            if((i+j)*(j-i+1)/2 < target){
+                j++;
+            }
+            else if((i+j)*(j-i+1)/2 > target){
+                i++;
+            }
+            else{
+                vector<int> temp;
+                for(int a=i;a<=j;a++){
+                    temp.push_back(a);
+                }
+                vec.push_back(temp);
+                j++;
+            }
+        }
+        return vec; 
+        
+    }
+};
