@@ -1,0 +1,91 @@
+
+/*
+class Solution {
+public:
+
+    vector<int> vec;
+
+    void quick(vector<int>& arr, int l ,int r ,int k){
+        // if(k==0){return vec;}
+        int mid = l + rand()%(r-l+1) ;
+        int less = l-1;
+        int p =l;
+        swap(arr[r],arr[mid]);
+        while(p < r){
+            if(arr[p] <= arr[r] ){
+                swap(arr[++less],arr[p++]);
+            }else{
+                p++;
+            }
+        }
+        swap(arr[r],arr[++less]);
+
+        if(k==less+1){
+            for(int i = l;i<=less;i++){
+                vec.push_back(arr[i]);
+            }
+            return;
+        }else if(k > less+1){
+            // 要是这样写的话，这里还要把所有小于的数都加上
+            for(int i = l;i<=less;i++){
+                vec.push_back(arr[i]);
+            }
+            quick(arr,less+1,r,k);
+        }else{
+            quick(arr,l,less-1,k);
+        }
+    }
+
+
+
+
+    vector<int> getLeastNumbers(vector<int>& arr, int k) {
+        if(k==0){return vec;}
+        quick(arr,0,arr.size()-1,k);
+        return vec;
+    }
+};   */
+
+
+
+// 像这样处理就好了，反正数组跑不了，
+
+class Solution {
+public:
+
+    void quick(vector<int>& arr, int l ,int r ,int k){
+        int mid = l + rand()%(r-l+1) ;
+        int less = l-1;
+        int p =l;
+        swap(arr[r],arr[mid]);
+        while(p < r){
+            if(arr[p] <= arr[r] ){
+                swap(arr[++less],arr[p++]);
+            }else{
+                p++;
+            }
+        }
+        swap(arr[r],arr[++less]);
+
+        if(k==less+1){
+            return;
+        }else if(k > less+1){
+            quick(arr,less+1,r,k);
+        }else{
+            quick(arr,l,less-1,k);
+        }
+    }
+
+    vector<int> getLeastNumbers(vector<int>& arr, int k) {
+        vector<int> vec;
+        if(k==0){return vec;}
+        quick(arr,0,arr.size()-1,k);
+        for(int i=0;i<k;i++){
+            vec.push_back(arr[i]);
+        }
+        return vec;
+    }
+};  
+
+
+
