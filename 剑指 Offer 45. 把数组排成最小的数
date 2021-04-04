@@ -1,0 +1,46 @@
+class Solution {
+public:
+
+
+    void quick(vector<string>& vec,int l,int r){
+        if(l >= r){
+            return;
+        }
+        int mid = l + rand()%(r-l+1);     
+        int less = l-1;
+        int p=l;
+        swap(vec[mid],vec[r]);
+        /*  注意不再是普通排序，而是公式
+        while(p<r){
+            if(vec[p] <= vec[r]){
+                swap(vec[p++],vec[++less]);
+            }else{
+                p++;
+            }
+        } */
+        while(p<r){
+            if(vec[p]+vec[r] <= vec[r]+vec[p]){
+                swap(vec[p++],vec[++less]);
+            }else{
+                p++;
+            }
+        }
+        swap(vec[less+1],vec[r]);
+        quick(vec,l,less);
+        quick(vec,less+2,r);
+
+    }
+
+    string minNumber(vector<int>& nums) {
+        vector<string> vec;
+        for(auto num:nums){
+            vec.push_back(to_string(num));
+        }
+        quick(vec,0,vec.size()-1);
+        string sol;
+        for(auto str:vec){
+            sol += str;
+        }
+        return sol;
+    }
+};
