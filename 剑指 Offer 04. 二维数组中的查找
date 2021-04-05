@@ -1,3 +1,4 @@
+// 这种就是麻烦的写法，因为连着找行和列了
 class Solution {
 public:
     bool findNumberIn2DArray(vector<vector<int>>& matrix, int target) {
