@@ -1,0 +1,73 @@
+struct dlist{
+    dlist* pre;
+    dlist* next;
+    int key,value;
+    dlist():key(0),value(0),pre(nullptr),next(nullptr){}
+    dlist(int _key,int _value):key(_key),value(_value),pre(nullptr),next(nullptr){}
+};
+
+class LRUCache {
+private:
+    dlist* head;
+    dlist* tail;
+    int size,capacity;
+    unordered_map<int,dlist*> hash;
+public:
+    LRUCache(int capacity) {
+        this->capacity = capacity;
+        size = 0;
+        head = new dlist();
+        tail = new dlist();
+        head->next = tail;
+        tail->pre = head;
+    }
+    
+    int get(int key) {
+        if(hash.count(key)==0){
+            return -1;
+        }
+        removenode(hash[key]);
+        addHead(hash[key]);
+        return hash[key]->value;
+    }
+    
+    void put(int key, int value) {
+        if(hash.count(key)==0){
+            
+            dlist* ss = new dlist(key,value);
+            hash[key]= ss;
+            addHead(hash[key]);
+            ++size;
+            if(size>capacity){
+                dlist* temp = tail->pre;
+                removenode(temp);
+                //哈希表删除的时候不要删除错了
+                // 不是hash.erase(key);
+                hash.erase(temp->key);
+                --size;
+                delete temp;
+            }
+        }else{
+            hash[key]->value = value;
+            removenode(hash[key]);
+            addHead(hash[key]);
+        }
+    }
+    void removenode(dlist* node){
+        node->pre->next = node->next;
+        node->next->pre = node->pre;
+    }
+    void addHead(dlist* node){
+        node->next = head->next;
+        node->pre = head;
+        head->next = node;
+        node->next->pre = node;
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
