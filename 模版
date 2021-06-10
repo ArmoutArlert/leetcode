@@ -1,0 +1,8 @@
+递归模版
+void process(string& str,int index,string path){
+// 如果有for循环且path传递的并不是引用传递，那么path注意要pop_back的
+  for(int i = index;i<n;i++){
+    path += ....;
+    path.pop_back();  // 注意没有这步还原是不对的，虽然不是递归函数引用传参
+  }
+}
