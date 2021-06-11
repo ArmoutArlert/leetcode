@@ -1,0 +1,28 @@
+//  去重的三种方式：1.采用set,2.采用hash 3. 采用排序
+class Solution {
+public:
+     vector<vector<int>> vec;
+        void process(vector<int>& nums,vector<int> path, int index){
+            if(index == nums.size()){
+                vec.push_back(path);
+                return;
+            }
+            unordered_set<int> hash;
+            for(int i=index;i<nums.size();i++){
+                if(hash.count(nums[i]) == 0){
+                    hash.emplace(nums[i]);
+                    swap(nums[i],nums[index]);
+                    path.push_back(nums[index]);
+                    process(nums,path,index+1);
+                    path.pop_back();
+                    swap(nums[i],nums[index]);
+                }
+            }      
+        }
+        
+        
+        vector<vector<int>> permuteUnique(vector<int>& nums) {
+            process(nums,{},0);
+            return vec;
+        }
+};
